@@ -13,10 +13,55 @@
 */
 
 mas homer {
-
-    agent sample_agent
-
+	
+   agent user1 : user.asl{ 
+      instances: 1
+    }
     
+
+   agent device1 : devices.asl{ 
+      instances: 5
+    }
+    
+    agent sup1 : supervisor.asl{ 
+      instances: 1
+    }
+    
+    agent location1 : location.asl{ 
+      instances: 1
+    }
+    
+    agent security1 : security.asl{ 
+      instances: 1
+    }
+    
+    agent enter1 : entertainment.asl{ 
+      instances: 1
+    }
+    
+    agent control1 : controller.asl{ 
+      instances: 1
+    }
+    
+    
+     organisation ohomer: org_home.xml {
+        group reactive_group: reactive {
+			players:   device1 devices
+					   sup1	supervisor
+	                   debug    
+       }
+       group deliberative_group: deliberative {
+	        players: location1 location
+	        		 security1 security
+	        		 enter1 entertainment
+	        		 control1 controller
+	        		 debug 
+	    }
+ 
+   }
+
+  // agent source path
+  asl-path: src/agt, src/agt/inc
 
 }
 

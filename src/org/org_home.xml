@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?xml-stylesheet href="http://moise.sourceforge.net/xml/os.xsl" type="text/xsl" ?>
+
+<organisational-specification
+    id="org_home"
+    os-version="0.8"
+
+    xmlns='http://moise.sourceforge.net/os'
+    xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+    xsi:schemaLocation='http://moise.sourceforge.net/os
+                        http://moise.sourceforge.net/xml/os.xsd' >
+
+<structural-specification>
+
+<role-definitions>
+    <role id="devices" />
+    <role id="supervisor" />
+    <role id="user" />
+    <role id="caregiver" />
+	    <role id="location">	 	<extends role="caregiver"/> </role>
+	    <role id="security"> 		<extends role="caregiver"/> </role>
+	    <role id="entertainment"> 	<extends role="caregiver"/> </role>
+	    <role id="controller"> 		<extends role="caregiver"/> </role>
+</role-definitions>
+
+<group-specification id="home_group">
+<subgroups>
+	<group-specification id="reactive" min="1" max="1">
+		 <roles>
+	        <role id="devices" min="1" max="5"/>
+	        <role id="supervisor" min="1" max="1"/>
+	    </roles>
+	
+	    <links>
+	    	<link from="devices" to="caregiver" type="communication" scope="intra-group" />
+	    	<link from="supervisor" to="caregiver" type="communication" scope="intra-group" />
+	    </links>
+	</group-specification>
+	
+	<group-specification id="deliberative" min="1" max="1">
+		 <roles>
+	        <role id="location" min="1" max="1"/>
+	        <role id="security" min="1" max="1"/>
+	        <role id="entertainment" min="1" max="1"/>
+	        <role id="controller" min="1" max="1"/>
+	    </roles>
+	
+	    <links>
+	       <link from="caregiver" type="communication" to="caregiver" scope="intra-group" extends-subgroups="true" />
+	    </links>
+		
+	</group-specification>
+   
+  </subgroups>
+  
+   <formation-constraints>
+	       <compatibility from="caregiver" to="caregiver" scope="intra-group"  />
+	    </formation-constraints>
+   </group-specification>
+
+
+</structural-specification>
+
+
+</organisational-specification>
