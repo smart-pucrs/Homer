@@ -50,7 +50,7 @@ mas homer {
 					   sup1	supervisor
 	                   debug    
        }
-       group deliberative_group: deliberative {
+       	group deliberative_group: deliberative {
 	        players: location1 location
 	        		 security1 security
 	        		 enter1 entertainment
