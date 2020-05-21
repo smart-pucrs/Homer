@@ -41,6 +41,11 @@ mas homer {
     
     agent control1 : controller.asl{ 
       instances: 1
+      focus: integration
+    }
+    
+    workspace wp{
+    	artifact integration:br.pucrs.smart.IntegrationArtifact
     }
     
     
@@ -57,11 +62,11 @@ mas homer {
 	        		 control1 controller
 	        		 debug 
 	    }
+
  
    }
-
-  // agent source path
-  asl-path: src/agt, src/agt/inc
+   
+      platform: br.pucrs.smart.RestArtifact("--main 2181 --restPort 8080")
 
 }
 

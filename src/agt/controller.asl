@@ -1,17 +1,31 @@
-// Agent devices in project homer
-
-/* Initial beliefs and rules */
-
-/* Initial goals */
-
-!start.
-
-/* Plans */
-
-+!start : true <- .print("hello world.").
++request(Req)
+	:true
+<-
+	.print("Recebido request ",Req," do Dialog");
+	!responder(Req);
+	.
+	
++!responder(Req)
+	: (Req == "Call Jason Agent")
+<-
+	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
+	.
++!responder(Req)
+	: (Req == "Call With Contexts and Parameters")
+<-
+	reply("Olá, eu sou seu agente Jason com contexto e parametros, em que posso lhe ajudar AQUIII?");
+	.
++!responder(Req)
+	: true
+<-
+	reply("Desculpe, não reconheço essa intenção");
+	.
+	
++!hello
+    : True
+<-
+    .print("hello world");
+    .
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
-
-// uncomment the include below to have an agent compliant with its organisation
-//{ include("$moiseJar/asl/org-obedient.asl") }

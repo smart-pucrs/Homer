@@ -44,7 +44,7 @@ public class CloudVision {
 	          .build();
 	      requests.add(request);
 
-	      // Performs label detection on the image file dfsdfsdfsdfsdsd
+	      // Performs label detection on the image file
 	      BatchAnnotateImagesResponse response = vision.batchAnnotateImages(requests);
 	      List<AnnotateImageResponse> responses = response.getResponsesList();
 
