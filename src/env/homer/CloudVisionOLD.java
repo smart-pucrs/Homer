@@ -20,7 +20,7 @@ import com.google.protobuf.ByteString;
 
 
 
-public class CloudVision {
+public class CloudVisionOLD {
 	public static void main(String... args) throws Exception {
 	    // Instantiates a client
 	    try (ImageAnnotatorClient vision = ImageAnnotatorClient.create()) {

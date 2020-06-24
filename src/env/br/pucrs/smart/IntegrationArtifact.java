@@ -49,16 +49,17 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 				System.out.println("parameters: " + key + " : " + value);
 
 			}
-			for (OutputContexts outputContext : outputContexts) {
-				System.out.println("OutputContexts name: " + outputContext.getName());
-				System.out.println("OutputContexts lifespanCount: " + outputContext.getLifespanCount());
-				System.out.println("OutputContexts parameters: ");
-				for(Map.Entry<String, String> entry : parameters.entrySet()) {
-				    String key = entry.getKey();
-				    String value = entry.getValue();
-					System.out.println(key + " : " + value);
+			if (outputContexts != null) {
+				for (OutputContexts outputContext : outputContexts) {
+					System.out.println("OutputContexts name: " + outputContext.getName());
+					System.out.println("OutputContexts lifespanCount: " + outputContext.getLifespanCount());
+					System.out.println("OutputContexts parameters: ");
+					for(Map.Entry<String, String> entry : parameters.entrySet()) {
+						String key = entry.getKey();
+						String value = entry.getValue();
+						System.out.println(key + " : " + value);
+					}
 				}
-				
 			}
 			
 			execInternalOp("defineRequest", request);
@@ -86,42 +87,4 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 		}
 		return response;
 	}
-	
-
-//	public void simStartMessage(JsonObject starMessage) {
-//		List<String> filter = Arrays.asList("id", "map");
-//		JsonObject config = starMessage.get("agent_percepts").getAsJsonObject();
-//		JsonObject map = starMessage.get("map_percepts").getAsJsonObject();
-//		// we need to ensure the token will be an atom
-//		String token = config.get("token").getAsString();
-//		config.remove("token");
-//		config.addProperty("token", "\'"+token+"\'");
-//		filter.forEach(f -> map.remove(f));
-//
-//		try {
-//			List<Percept> p = new ArrayList<Percept>();
-//			p.addAll(Translator.entryToPercept(config.entrySet()));
-//			p.addAll(Translator.entryToPercept(map.entrySet()));
-//
-//			execInternalOp("updatePerceptions", null, p, null);
-//		} catch (ParseException e) {
-//			logger.info("failed to parse initial percetions: " + e.getMessage());
-//		}
-//	}
-//	
-//	@INTERNAL_OPERATION
-//	private void updatePerceptions(Collection<Percept> previousPercepts, Collection<Percept> percepts,
-//			List<String> orderPercept) {
-//		if (previousPercepts == null) {// should add all new perceptions
-//			for (Percept percept : percepts) {
-//				try {
-//					Literal literal = Translator.perceptToLiteral(percept);
-//					defineObsProperty(literal.getFunctor(), (Object[]) literal.getTermsArray());
-//				} catch (JasonException e) {
-//					logger.info("Failed to parse percept to literal: " + e.getMessage());
-//				}
-//			}
-//		}
-//	}
-
 }

@@ -1,3 +1,5 @@
+!hello.
+
 +request(Req)
 	:true
 <-
@@ -16,6 +18,11 @@
 	reply("Olá, eu sou seu agente Jason com contexto e parametros, em que posso lhe ajudar AQUIII?");
 	.
 +!responder(Req)
+	: (Req == "Call With Contexts")
+<-
+	reply("Olá, eu sou seu agente Jason com contexto, em que posso lhe ajudar AQUIII?");
+	.
++!responder(Req)
 	: true
 <-
 	reply("Desculpe, não reconheço essa intenção");
@@ -24,7 +31,8 @@
 +!hello
     : True
 <-
-    .print("hello world");
+    .print("Localize o objeto Food");
+    locateObjects("Food");
     .
 
 { include("$jacamoJar/templates/common-cartago.asl") }

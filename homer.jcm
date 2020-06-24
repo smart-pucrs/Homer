@@ -41,11 +41,12 @@ mas homer {
     
     agent control1 : controller.asl{ 
       instances: 1
-      focus: integration
+      focus: integration, vision
     }
     
     workspace wp{
     	artifact integration:br.pucrs.smart.IntegrationArtifact
+    	artifact vision:homer.VisionArtifact
     }
     
     
@@ -53,14 +54,14 @@ mas homer {
         group reactive_group: reactive {
 			players:   device1 devices
 					   sup1	supervisor
-	                   debug    
+	                   //debug    
        }
        	group deliberative_group: deliberative {
 	        players: location1 location
 	        		 security1 security
 	        		 enter1 entertainment
 	        		 control1 controller
-	        		 debug 
+	        		// debug 
 	    }
 
  
@@ -69,4 +70,3 @@ mas homer {
       platform: br.pucrs.smart.RestArtifact("--main 2181 --restPort 8080")
 
 }
-
