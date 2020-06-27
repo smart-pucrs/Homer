@@ -1,12 +1,12 @@
 [
   "objectify6",
+  "googlecloudvision",
+  "googlecloudspeech",
+  "videointelligence",
+  "googlecloudnaturallanguage",
+  "dialogflow",
   "cloudfirestore",
   "iotcore",
   "texttospeech",
-  "googlecloudvision",
-  "dialogflow",
-  "googlecloudspeech",
-  "videointelligence",
-  "cloudtranslation",
-  "googlecloudnaturallanguage"
+  "cloudtranslation"
 ]
