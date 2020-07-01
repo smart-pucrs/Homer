@@ -28,14 +28,16 @@ import com.google.protobuf.ByteString;
 import com.google.cloud.translate.*;
 
 public class CloudVision {
-	public static void detectLocalizedObjects(String  inputPath, String outputPath, PrintStream out)
+	public static List<ObjectRepresentation> detectLocalizedObjects(String  inputPath, String outputPath, PrintStream out)
 	        throws Exception, IOException {
+		  
 		  out.format("|======Teste======|%n");
 		  
-		  // ConfiguraÁ„o de conex„o com API de traduÁ„o
+		  List<ObjectRepresentation> returnObjectArr = new ArrayList<>();
+		  // Configura√ß√£o de conex√£o com API de tradu√ß√£o
 		  Translate translate = TranslateOptions.getDefaultInstance().getService(); 
-		  
-		  //ConfiguraÁ„o para a API de detecÁ„o
+
+		  //Configura√ß√£o para a API de detec√ß√£o
 	      List<AnnotateImageRequest> requests = new ArrayList<>();
 
 	      ByteString imgBytes = ByteString.readFrom(new FileInputStream(inputPath));
@@ -62,63 +64,63 @@ public class CloudVision {
 	        
 	         out.format("      #Results#    %n");
 	       	 out.format("Objects: %d%n", res.getLocalizedObjectAnnotationsList().size()); 
-	       	 String[] names = new String[res.getLocalizedObjectAnnotationsList().size()];
+	       	String[] names = new String[res.getLocalizedObjectAnnotationsList().size()];
 	       	 for (int i =0 ; i < names.length; i++) {
 	       		 names[i] = "";
 	       	 }
 	       	 int nObj = 0;
-	       	
+	       	 
 	          for (LocalizedObjectAnnotation entity : res.getLocalizedObjectAnnotationsList()) {
 	            
 	            double[][] objBoundCords  = wrapCords(entity.getBoundingPoly().getNormalizedVerticesList().toString());
 	            
-	            Translation translation = translate.translate( entity.getName(), // EspecificaÁıes da traduÁ„o
-			            	     Translate.TranslateOption.sourceLanguage("en"),
-			            	     Translate.TranslateOption.targetLanguage("pt"),
-			            	           Translate.TranslateOption.model("base"));
-	            String Tname = translation.getTranslatedText(); // Traduz o nome do objeto
-	            
-	            names[nObj] = Tname; 
-	            nObj++;
-	            
-	            // Conta os objetos iguais
-	            int n = 0;
-	            for(int i = 0 ; i < names.length; i++) {
-	            	if(names[i].equals(Tname)) {
-	            		n++;
-	            	}
-	            }
-	            
-	             // Muda o nome de objetos iguais
-	            if(n > 1) {
-	            	name = Tname + " " + String.valueOf(n);
-	            } else {
-	            	name = Tname;
-	            }
-	            
-	            ObjectRepresentation obj = new ObjectRepresentation(name, entity.getScore(), objBoundCords); //Cria o objeto com seus respectivos valores
-	            
-	            out.format("Nome: %s%nConfidence: %s%nCordenadas: %s%nLocalizaÁ„o: %s%n%n", obj.getName(), 
-	            		                                                    String.valueOf(obj.getConf()), 
-	            		                                                                  obj.objCenter(),
-	            		                                                                obj.getDegrees()); 
+	            Translation translation = translate.translate( entity.getName(), // Especifica√ß√µes da tradu√ß√£o
+	            	     Translate.TranslateOption.sourceLanguage("en"),
+	            	     Translate.TranslateOption.targetLanguage("pt"),
+	            	           Translate.TranslateOption.model("base"));
+			       String Tname = translation.getTranslatedText(); // Traduz o nome do objeto
+			       
+			       names[nObj] = Tname; 
+			       nObj++;
+			       
+			       // Conta os objetos iguais
+			       int n = 0;
+			       for(int i = 0 ; i < names.length; i++) {
+			       	if(names[i].equals(Tname)) {
+			       		n++;
+			       	}
+			       }
+			       
+			        // Muda o nome de objetos iguais
+			       if(n > 1) {
+			       	name = Tname + " " + String.valueOf(n);
+			       } else {
+			       	name = Tname;
+			       }
+			       
+			       ObjectRepresentation obj = new ObjectRepresentation(name, entity.getScore(), objBoundCords); //Cria o objeto com seus respectivos valores
+//			       out.format("Nome: %s%nConfidence: %s%nCordenadas: %s%nLocaliza√ß√£o: %s%n%n", obj.getName(), 
+//                           String.valueOf(obj.getConf()), 
+//                                         obj.objCenter(),
+//                                       obj.getDegrees()); 
+			       returnObjectArr.add(obj);         
 	          }
 	          
-          	if (!outputPath.toLowerCase().endsWith(".jpg")) { //Confere se a imagem est· no formato jpg
-          		System.err.println("outputImagePath must have the file extension 'jpg' !");
-          		System.err.println("Not drawing");
-          	} else {
-          	out.format("Drawing result in output.jpg...%n"); 
-          	setDrawImages(Paths.get(inputPath), Paths.get(outputPath), res.getLocalizedObjectAnnotationsList());
-          	out.format("Done !%n%n"); 
-          	}
-	         
+	          	if (!outputPath.toLowerCase().endsWith(".jpg")) { //Confere se a imagem est√° no formato jpg
+	          		System.err.println("outputImagePath must have the file extension 'jpg' !");
+	          		System.err.println("Not drawing");
+	          	} else {
+					out.format("Drawing result in output.jpg...%n"); 
+					setDrawImages(Paths.get(inputPath), Paths.get(outputPath), res.getLocalizedObjectAnnotationsList());
+					out.format("Done !%n%n");
+				} 	         
 	        }
-	        out.format("|=================|%n");
+	        out.format("|=================|%n");		      
 	      }
+		return returnObjectArr;
 	    }
 	
-	//FunÁ„o para formatar as cordenadas em array
+	//Fun√ß√£o para formatar as cordenadas em array
 	public static double[][] wrapCords(String cords) {  
 		double[][] objBoundCords = new double[4][2];
 		double x1, y1, x2, y2, x3, y3, x4, y4;
@@ -174,15 +176,15 @@ public class CloudVision {
 		return objBoundCords;
 	}
 
-	//FunÁ„o para localizar aquivos de entrada e saida da imagem
-	public static void setDrawImages(Path inputP, Path outputP, List<LocalizedObjectAnnotation> objs) throws IOException{
+	//Fun√ß√£o para localizar aquivos de entrada e saida da imagem
+	public static void setDrawImages(Path inputP, Path outputP, List<LocalizedObjectAnnotation> objs) throws IOException{		 
 			  BufferedImage img = ImageIO.read(inputP.toFile());
 			  drawImages(img, objs);
 			  ImageIO.write(img, "jpg", outputP.toFile());
 			
 	}
 	
-	//FunÁ„o para desenhar os objetos na imagem
+	//Fun√ß√£o para desenhar os objetos na imagem
 	public static void drawImages(BufferedImage img, List<LocalizedObjectAnnotation> objs) {
 	     for (LocalizedObjectAnnotation entity : objs) {
 	    	 double[][] objBoundCords  = wrapCords(entity.getBoundingPoly().getNormalizedVerticesList().toString());
@@ -192,7 +194,7 @@ public class CloudVision {
 	     
 	}
 	
-	//FunÁ„o que desenha os contornos dos objetos de acordo com as cordenadas 
+	//Fun√ß√£o que desenha os contornos dos objetos de acordo com as cordenadas 
 	public static void drawImage(BufferedImage img, LocalizedObjectAnnotation entity, ObjectRepresentation obj) {
 		Graphics2D gfx = img.createGraphics();
 		
@@ -222,7 +224,7 @@ public class CloudVision {
 		 drawCenter(gfx, obj, scaleX, scaleY); 
 	}
 	
-	//FunÁ„o que desenha o centro da imagem
+	//Fun√ß√£o que desenha o centro da imagem
 	public static void drawCenter(Graphics2D gfx, ObjectRepresentation obj, int scaleX, int scaleY) {
 		double[] xy = obj.getObjCenter(); 
 		Path2D poly2 = new Path2D.Double();

@@ -61,6 +61,7 @@ dependencies {
 	compile 'com.google.cloud:google-cloud-vision:1.99.3'
 	
 	compile 'com.google.cloud:google-cloud-translate:1.95.0'
+	
 }
 
 
