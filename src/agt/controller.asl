@@ -1,40 +1,66 @@
+//Se a lista terminar sem encontrar nenhum objeto igual, devolva "indefinido".
+getLocation(Value, [], ObjectLocation) :- ObjectLocation="indefinido".
+//Se o Value for igual ao Nome, devolva a localização
+getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- (Value == Nome) & ObjectLocation=Localizacao.
+//Se o Value for diferente do Nome, verifique o próximo objeto 
+getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- (Value \== Nome) & getLocation(Value, RestOfTheList, ObjectLocation).
+
 !hello.
 
-+request(Req)
++request(ResponseId, IntentName, Params, Contexts)
 	:true
 <-
-	.print("Recebido request ",Req," do Dialog");
-	!responder(Req);
+	.print("Recebido request ",IntentName," do Dialog");
+	!responder(ResponseId, IntentName, Params, Contexts);
 	.
 	
-+!responder(Req)
-	: (Req == "Call Jason Agent")
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Call Jason Agent")
 <-
-	reply("OlÃ¡, eu sou seu agente Jason, em que posso lhe ajudar?");
+	reply("Olá, eu sou seu agente Jason, em que posso lhe ajudar?");
 	.
-+!responder(Req)
-	: (Req == "Call With Contexts and Parameters")
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Call With Contexts and Parameters")
 <-
-	reply("OlÃ¡, eu sou seu agente Jason com contexto e parametros, em que posso lhe ajudar AQUIII?");
+	.print("Os contextos e parâmetros serão listados a seguir.");
+	!printContexts(Contexts);
+	!printParameters(Params);
+	reply("Olá, eu sou seu agente Jason, recebi seus contextos e parâmetros");
 	.
-+!responder(Req)
-	: (Req == "Call With Contexts")
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Call With Contexts")
 <-
-	reply("OlÃ¡, eu sou seu agente Jason com contexto, em que posso lhe ajudar AQUIII?");
+	.print("Os contextos serão listados a seguir.");
+	!printContexts(Contexts);
+	reply("Olá, eu sou seu agente Jason, recebi seus contextos");
 	.
-+!responder(Req)
-	: (Req == "Get Objects In The Scene")
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Objects In The Scene")
 <-
-	.print("Chatbot solicitando informaÃ§Ã£o sobre os objetos na imagem.")
+	.print("Chatbot solicitando informação sobre os objetos na imagem.")
 	!informObjects(List);
 	!montarResposta(List, Response);	
 	.print("Respondendo para o chatbot: ", Response)
 	reply(Response);
 	.
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get specific object")
+<-
+	.print("Chatbot solicitando localização de objeto.")
+	!informObjects(List);
+	!locateObject(Params, List, Response)	
+	.print("Respondendo para o chatbot: ", Response)
+	reply(Response);
+	.
+	
 +!responder(Req)
 	: true
 <-
-	reply("Desculpe, nÃ£o reconheÃ§o essa intenÃ§Ã£o");
+	reply("Desculpe, não reconheço essa intensão");
 	.
 
 +!desmembrarItens([], Temp, Response)
@@ -45,19 +71,19 @@
 +!desmembrarItens([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length > 1
 <-
-	.concat(Temp, "O objeto ", Nome, " estÃ¡ ", Localizacao, ", ", Resp);	
+	.concat(Temp, "O objeto ", Nome, " está ", Localizacao, ", ", Resp);	
 	!desmembrarItens(RestOfTheList, Resp, Response);
 	.
 +!desmembrarItens([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length == 1
 <-
-	.concat(Temp, "O objeto ", Nome, " estÃ¡ ", Localizacao, " e ", Resp);	
+	.concat(Temp, "O objeto ", Nome, " está ", Localizacao, " e ", Resp);	
 	!desmembrarItens(RestOfTheList, Resp, Response);
 	.
 +!desmembrarItens([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length < 1
 <-
-	.concat(Temp, "O objeto ", Nome, " estÃ¡ ", Localizacao, ". ", Resp);
+	.concat(Temp, "O objeto ", Nome, " está ", Localizacao, ". ", Resp);
 	!desmembrarItens(RestOfTheList, Resp, Response);
 	.
 
@@ -76,24 +102,32 @@
 +!montarResposta(List, Response)
 	: .length(List,Length) & Length < 1
 <-
-	Response = "Eu nÃ£o encontrei nenhum objeto.";
-	.concat("Eu nÃ£o encontrei nenhum objeto.", Response);
+	Response = "Eu não encontrei nenhum objeto.";
+	.concat("Eu não encontrei nenhum objeto.", Response);
 	.
-	
-+!hello
-    : True
-<-
-    !informObjects(List);
-	!montarResposta(List, Response);
-	.print(Response)
-    .
-    
-+!locateObject(Obj)
-	: true
+
+ +!locateObject([], List, Response)
 <- 
-	.print("Localize o objeto ", Obj);
-    !informObjects(List);
-    !printInformedObjects(List);
+	.print("Não entendi qual objeto devo procurar");
+	Response = "Desculpe, não entendi qual objeto devo procurar.";
+    .
+ +!locateObject([param(Key, Value)|RestOfTheList], List, Response)
+	: (Key \== "object-name")
+<- 
+	.print("Outro parâmetro: ", Key);
+	!locateObject(RestOfTheList, List, Response)
+    .
++!locateObject([param(Key, Value)|RestOfTheList], List, Response)
+	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation \== "indefinido")
+<- 
+	.print("Objeto ", Value, " localizado: ", ObjectLocation);
+    .concat("O objeto ", Value, " está localizado ", ObjectLocation, Response);
+    .
+ +!locateObject([param(Key, Value)|RestOfTheList], List, Response)
+	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation == "indefinido")
+<- 
+	.print("Objeto ", Value, " não localizado na imagem ");
+    .concat("Desculpe, não consegui localizar o objeto ", Value, Response);
     .
     
 +!informObjects(List)
@@ -101,7 +135,6 @@
 <- 
 	.print("Informe os objetos da imagem");
     informObjects(List); //[objectRepresentation(nome, confidence, center, localizacao)]
-//    !printInformedObjects(List);
     .
 
 +!printInformedObjects([]).
@@ -110,6 +143,29 @@
 	.print(Item);//objectRepresentation(nome, confidence, center, localizacao)
 	!printInformedObjects(RestOfTheList);
 	.
+
++!printContexts([]).
++!printContexts([Context|List])
+<-
+	.print(Context);
+	!printContexts(List);
+	.
+
++!printParameters([]).
++!printParameters([Param|List])
+<-
+	.print(Param)
+	!printParameters(List)
+	.
+
++!hello
+    : True
+<-
+    !informObjects(List);
+	!montarResposta(List, Response);
+	.print(Response)
+    .
+    
 
 { include("$jacamoJar/templates/common-cartago.asl") }
 { include("$jacamoJar/templates/common-moise.asl") }
