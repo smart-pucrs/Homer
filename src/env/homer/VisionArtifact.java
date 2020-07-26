@@ -2,6 +2,7 @@
 
 package homer;
 
+import java.awt.image.RenderedImage;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,9 +20,8 @@ public class VisionArtifact extends Artifact {
 	void informObjects(OpFeedbackParam<Literal[]> objectNames) {
 		try {
 			System.out.println("Chamando CloudVision.detectLocalizedObjects");
-			String inputPath = "C:/Users/Juliana/Desktop/Pictures_Vision/two_cherries_2-wallpaper-1280x768.jpg";
-			String outputPath = "C:/Users/Juliana/Desktop/Pictures_Vision/two_cherries_2-wallpaper-1280x768-output.jpg";
-			List<ObjectRepresentation> returnObjectArr = CloudVision.detectLocalizedObjects(inputPath, outputPath, System.out);
+			String outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/testeWebcam-output.jpg";
+			List<ObjectRepresentation> returnObjectArr = CloudVision.detectLocalizedObjects(outputPath, System.out);
 			List<Object> localizedObjects = new ArrayList<Object>();
 			for (ObjectRepresentation objectRepresentation : returnObjectArr) {
 				// objectRepresentation(nome, confidence, center, localizacao)
@@ -30,10 +30,6 @@ public class VisionArtifact extends Artifact {
 				l.addTerm(ASSyntax.createString(objectRepresentation.objCenter()));
 				l.addTerm(ASSyntax.createString(objectRepresentation.getDegrees()));
 				localizedObjects.add(l);
-//				System.out.format("Name: %s%nConfidence: %s%nCordinates: %s%nLocalização: %s%n%n", objectRepresentation.getName(), 
-//	                    String.valueOf(objectRepresentation.getConf()), 
-//	                    objectRepresentation.objCenter(),
-//	                    objectRepresentation.getDegrees());
 			}
 			
 			objectNames.set(localizedObjects.toArray(new Literal[localizedObjects.size()]));
