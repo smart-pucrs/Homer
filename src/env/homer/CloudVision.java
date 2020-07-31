@@ -28,20 +28,23 @@ import com.google.cloud.vision.v1.ImageAnnotatorClient;
 import com.google.protobuf.ByteString;
 import com.google.cloud.translate.*;
 
+
 public class CloudVision {
 	public static List<ObjectRepresentation> detectLocalizedObjects(String outputPath, PrintStream out)
 	        throws Exception, IOException {
 		  out.format("|======Teste======|%n");
 		  List<ObjectRepresentation> returnObjectArr = new ArrayList<>();
-		  // ConfiguraÁ„o de conex„o com API de traduÁ„o
+		  // Configura√ß√£o de conex√£o com API de tradu√ß√£o
 		  Translate translate = TranslateOptions.getDefaultInstance().getService(); 
 
-		  //ConfiguraÁ„o para a API de detecÁ„o
+		  // Configura√ß√£o para a API de detec√ß√£o
 	      List<AnnotateImageRequest> requests = new ArrayList<>();
 	      
 
 	      ByteArrayInputStream photo = PersonalWebCam.takePhoto();			
-
+	      File imgtest = new File(PersonalWebCam.outputPath);
+	      FileInputStream imgtd = new FileInputStream(imgtest);
+	      
 //	      ByteString imgBytes = ByteString.readFrom(new FileInputStream(inputPath));
 	      ByteString imgBytes = ByteString.readFrom(photo);
 
@@ -77,11 +80,11 @@ public class CloudVision {
 	            
 	            double[][] objBoundCords  = wrapCords(entity.getBoundingPoly().getNormalizedVerticesList().toString());
 	            
-	            Translation translation = translate.translate( entity.getName(), // EspecificaÁıes da traduÁ„o
+	            Translation translation = translate.translate( entity.getName(), // Especifica√ß√µes da tradu√ß√£o
 	            	     Translate.TranslateOption.sourceLanguage("en"),
 	            	     Translate.TranslateOption.targetLanguage("pt"),
 	            	           Translate.TranslateOption.model("base"));
-			       String Tname = translation.getTranslatedText(); // Traduz o nome do objeto
+			       String Tname = translation.getTranslatedText().toLowerCase(); // Traduz o nome do objeto
 			       
 			       names[nObj] = Tname; 
 			       nObj++;
@@ -102,20 +105,20 @@ public class CloudVision {
 			       }
 			       
 			       ObjectRepresentation obj = new ObjectRepresentation(name, entity.getScore(), objBoundCords); //Cria o objeto com seus respectivos valores
-//			       out.format("Nome: %s%nConfidence: %s%nCordenadas: %s%nLocalizaÁ„o: %s%n%n", obj.getName(), 
+//			       out.format("Nome: %s%nConfidence: %s%nCordenadas: %s%nLocaliza√ß√£o: %s%n%n", obj.getName(), 
 //                           String.valueOf(obj.getConf()), 
 //                                         obj.objCenter(),
 //                                       obj.getDegrees()); 
 			       returnObjectArr.add(obj);         
 	          }
 	          
-	          	if (!outputPath.toLowerCase().endsWith(".jpg")) { //Confere se a imagem est· no formato jpg
+	          	if (!outputPath.toLowerCase().endsWith(".jpg")) { //Confere se a imagem est√° no formato jpg
 	          		System.err.println("outputImagePath must have the file extension 'jpg' !");
 	          		System.err.println("Not drawing");
-//	          	} else {
-//					out.format("Drawing result in output.jpg...%n"); 
-//					setDrawImages(ImageIO.read(photo), Paths.get(outputPath), res.getLocalizedObjectAnnotationsList());
-//					out.format("Done !%n%n");
+	          	} else {
+					out.format("Drawing result in output.jpg...%n"); 
+					setDrawImages(ImageIO.read(imgtd), Paths.get(outputPath), res.getLocalizedObjectAnnotationsList());
+					out.format("Done !%n%n");
 				} 	         
 	        }
 	        out.format("|=================|%n");		      
@@ -123,7 +126,7 @@ public class CloudVision {
 		return returnObjectArr;
 	    }
 	
-	//FunÁ„o para formatar as cordenadas em array
+	//Fun√ß√£o para formatar as cordenadas em array
 	public static double[][] wrapCords(String cords) {  
 		double[][] objBoundCords = new double[4][2];
 		double x1, y1, x2, y2, x3, y3, x4, y4;
@@ -179,7 +182,7 @@ public class CloudVision {
 		return objBoundCords;
 	}
 
-	//FunÁ„o para localizar aquivos de entrada e saida da imagem
+	//Fun√ß√£o para localizar aquivos de entrada e saida da imagem
 	public static void setDrawImages(BufferedImage img, Path outputP, List<LocalizedObjectAnnotation> objs) throws IOException{		 
 //			  BufferedImage img = ImageIO.read(inputP.toFile());
 			  drawImages(img, objs);
@@ -187,7 +190,7 @@ public class CloudVision {
 			
 	}
 	
-	//FunÁ„o para desenhar os objetos na imagem
+	//Fun√ß√£o para desenhar os objetos na imagem
 	public static void drawImages(BufferedImage img, List<LocalizedObjectAnnotation> objs) {
 	     for (LocalizedObjectAnnotation entity : objs) {
 	    	 double[][] objBoundCords  = wrapCords(entity.getBoundingPoly().getNormalizedVerticesList().toString());
@@ -197,9 +200,9 @@ public class CloudVision {
 	     
 	}
 	
-	//FunÁ„o que desenha os contornos dos objetos de acordo com as cordenadas 
+	//Fun√ß√£o que desenha os contornos dos objetos de acordo com as cordenadas 
 	public static void drawImage(BufferedImage img, LocalizedObjectAnnotation entity, ObjectRepresentation obj) {
-		Graphics2D gfx = img.createGraphics();
+		Graphics2D gfx =  img.createGraphics();
 		
 		Path2D poly = new Path2D.Double();
 		
@@ -227,7 +230,7 @@ public class CloudVision {
 		 drawCenter(gfx, obj, scaleX, scaleY); 
 	}
 	
-	//FunÁ„o que desenha o centro da imagem
+	//Fun√ß√£o que desenha o centro da imagem
 	public static void drawCenter(Graphics2D gfx, ObjectRepresentation obj, int scaleX, int scaleY) {
 		double[] xy = obj.getObjCenter(); 
 		Path2D poly2 = new Path2D.Double();

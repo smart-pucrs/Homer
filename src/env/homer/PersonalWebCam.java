@@ -16,7 +16,7 @@ public class PersonalWebCam {
 	
 	private static Dimension defaultDimension;
 	private static Webcam webcam;
-	private static String outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/testeWebcam.jpg";
+	public static String outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/testeWebcam.jpg";
 	
 	static ByteArrayInputStream takePhoto(){
 		inicializa();
