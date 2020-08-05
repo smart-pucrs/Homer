@@ -1,7 +1,7 @@
 #include "WiFi.h"
 #include "aREST.h"
 
- //ConfiguraÃ§Ã£o e inicializaÃ§Ã£o do Rest
+ //Configuração e inicialização do Rest
 aREST rest = aREST();
 WiFiServer server(80);
  
@@ -14,7 +14,7 @@ void setup() {
  
   Serial.begin(115200); // Inicializa o console da IDE com o ESP32
 
-  // Configura informaÃ§Ãµes do Rest
+  // Configura informações do Rest
   rest.set_id("001");
   rest.set_name("Sensor");
   rest.variable("Light",&Light); // Indica a variavel Light para ser checada pelo Rest
@@ -27,7 +27,7 @@ void setup() {
     Serial.print(".");
   }
   
-  //Mostra o IP da placa para fazer a conexÃ£o com o Homer
+  //Mostra o IP da placa para fazer a conexão com o Homer
   Serial.println("WiFi connected with IP: "); 
   Serial.println(WiFi.localIP());
  

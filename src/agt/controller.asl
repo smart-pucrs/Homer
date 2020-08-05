@@ -1,5 +1,7 @@
 //Se a lista terminar sem encontrar nenhum objeto igual, devolva "indefinido".
 getLocation(Value, [], ObjectLocation) :- ObjectLocation="indefinido".
+//Se houve erro ao buscar os objetos, devolva "erro".
+getLocation(Value, [objectRepresentation(Status)], ObjectLocation) :- (Status == "Erro") & ObjectLocation=Status.
 //Se o Value for igual ao Nome, devolva a localização
 getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- (Value == Nome) & ObjectLocation=Localizacao.
 //Se o Value for diferente do Nome, verifique o próximo objeto 
@@ -57,7 +59,7 @@ getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], O
 	reply(Response);
 	.
 	
-+!responder(Req)
++!responder(ResponseId, IntentName, Params, Contexts)
 	: true
 <-
 	reply("Desculpe, não reconheço essa intensão");
@@ -68,6 +70,11 @@ getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], O
 	Response = Temp;
 	.
 
++!desmembrarItens([objectRepresentation(Status)|RestOfTheList], Temp, Response)
+	: .length(RestOfTheList,Length) & Length < 1
+<-
+	Response = "Desculpe-me, houve um erro e não consegui verificar";
+	.
 +!desmembrarItens([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length > 1
 <-
@@ -118,23 +125,30 @@ getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], O
 	!locateObject(RestOfTheList, List, Response)
     .
 +!locateObject([param(Key, Value)|RestOfTheList], List, Response)
-	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation \== "indefinido")
+	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation == "Erro")
 <- 
-	.print("Objeto ", Value, " localizado: ", ObjectLocation);
-    .concat("O objeto ", Value, " está localizado ", ObjectLocation, Response);
+	.print("Erro ao localizar o objeto ", Value);
+    Response = "Desculpe-me, houve um erro e não consegui verificar";
     .
  +!locateObject([param(Key, Value)|RestOfTheList], List, Response)
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation == "indefinido")
-<- 
+<- 	
 	.print("Objeto ", Value, " não localizado na imagem ");
     .concat("Desculpe, não consegui localizar o objeto ", Value, Response);
+    .
++!locateObject([param(Key, Value)|RestOfTheList], List, Response)
+	: (Key == "object-name") & getLocation(Value, List, ObjectLocation)
+<- 
+	.print("Objeto ", Value, " localizado: ", ObjectLocation);
+    .concat("O objeto ", Value, " está localizado ", ObjectLocation, Response);
     .
     
 +!informObjects(List)
 	: true
 <- 
 	.print("Informe os objetos da imagem");
-    informObjects(List); //[objectRepresentation(nome, confidence, center, localizacao)]
+    informObjects(List); //[objectRepresentation(nome, confidence, center, localizacao)] or [objectRepresentation("Erro")]
+    .print(List);
     .
 
 +!printInformedObjects([]).

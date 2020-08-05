@@ -6,7 +6,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-
+import java.sql.Timestamp;
 import javax.imageio.ImageIO;
 
 import com.github.sarxos.webcam.Webcam;
@@ -16,9 +16,12 @@ public class PersonalWebCam {
 	
 	private static Dimension defaultDimension;
 	private static Webcam webcam;
-	public static String outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/testeWebcam.jpg";
+    static Timestamp ts = new Timestamp(System.currentTimeMillis());
+	private static String outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/testeWebcam" + ts.getTime() + ".jpg";
 	
 	static ByteArrayInputStream takePhoto(){
+		ts = new Timestamp(System.currentTimeMillis());
+		outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/testeWebcam" + ts.getTime() + ".jpg";
 		inicializa();
 		System.out.println("Ligando Webcam");
 		webcam.open();
@@ -48,6 +51,10 @@ public class PersonalWebCam {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	static String getOutputPath() {
+		return outputPath;
 	}
 
 }

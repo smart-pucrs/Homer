@@ -2,8 +2,6 @@
 
 package homer;
 
-import java.awt.image.RenderedImage;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,22 +18,25 @@ public class VisionArtifact extends Artifact {
 	void informObjects(OpFeedbackParam<Literal[]> objectNames) {
 		try {
 			System.out.println("Chamando CloudVision.detectLocalizedObjects");
-			String outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/testeWebcam-output.jpg";
-			List<ObjectRepresentation> returnObjectArr = CloudVision.detectLocalizedObjects(outputPath, System.out);
 			List<Object> localizedObjects = new ArrayList<Object>();
-			for (ObjectRepresentation objectRepresentation : returnObjectArr) {
-				// objectRepresentation(nome, confidence, center, localizacao)
-				Literal l = ASSyntax.createLiteral("objectRepresentation", ASSyntax.createString(objectRepresentation.getName()));
-				l.addTerm(ASSyntax.createString(objectRepresentation.getConf()));
-				l.addTerm(ASSyntax.createString(objectRepresentation.objCenter()));
-				l.addTerm(ASSyntax.createString(objectRepresentation.getDegrees()));
+			try {
+				List<ObjectRepresentation> returnObjectArr = CloudVision.detectLocalizedObjects();
+				for (ObjectRepresentation objectRepresentation : returnObjectArr) {
+					// objectRepresentation(nome, confidence, center, localizacao)
+					Literal l = ASSyntax.createLiteral("objectRepresentation", ASSyntax.createString(objectRepresentation.getName()));
+					l.addTerm(ASSyntax.createString(objectRepresentation.getConf()));
+					l.addTerm(ASSyntax.createString(objectRepresentation.objCenter()));
+					l.addTerm(ASSyntax.createString(objectRepresentation.getDegrees()));
+					localizedObjects.add(l);
+				}			
+				objectNames.set(localizedObjects.toArray(new Literal[localizedObjects.size()]));				
+			} catch (Exception e) {
+				System.out.println("Erro ao detectar objetos: " + e);
+				Literal l = ASSyntax.createLiteral("objectRepresentation", ASSyntax.createString("Erro"));
 				localizedObjects.add(l);
+				objectNames.set(localizedObjects.toArray(new Literal[localizedObjects.size()]));
 			}
 			
-			objectNames.set(localizedObjects.toArray(new Literal[localizedObjects.size()]));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

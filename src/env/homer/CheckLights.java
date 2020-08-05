@@ -1,9 +1,9 @@
 package homer;
 
 import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
+//import java.net.http.HttpClient;
+//import java.net.http.HttpRequest;
+//import java.net.http.HttpResponse;
 
 import com.google.gson.Gson;
 
@@ -20,29 +20,29 @@ public class CheckLights {
 
 	public static void main(String[] args) {
 		try {
-			// Envia uma solicita√ß√£o de variavel para o ESP32
+			// Envia uma solicitaÁ„o de variavel para o ESP32
 			System.out.print("Enviando Request ao ESP32... ");
-       	 	HttpClient client = HttpClient.newHttpClient();
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://IP_ESP32/Light")) // Inserir o IP do ESP32 exibido no console da IDE da placa
-                    .build();
-            HttpResponse<String> response = client.send(request,
-            			HttpResponse.BodyHandlers.ofString());
-            System.out.println("Pronto!");
-            
-            // Organiza a resposta em JSON
-            Gson gson = new Gson();
-            ReturnValues Jresponse = gson.fromJson(response.body(), ReturnValues.class);
-            
-            // Verifica a variavel e exibe a resposta
-            if(Jresponse.getLight()) {
-            	System.out.println("A luz est√° ligada");
-            } else if(!Jresponse.getLight()) {
-            	System.out.println("A luz est√° desligada");
-            } else {
-            	System.out.println("N√£o foi possivel reconhecer o estado da luz");
-            }
-            
+//       	 	HttpClient client = HttpClient.newHttpClient();
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .uri(URI.create("http://IP_ESP32/Light")) // Inserir o IP do ESP32 exibido no console da IDE da placa
+//                    .build();
+//            HttpResponse<String> response = client.send(request,
+//            			HttpResponse.BodyHandlers.ofString());
+//            System.out.println("Pronto!");
+//            
+//            // Organiza a resposta em JSON
+//            Gson gson = new Gson();
+//            ReturnValues Jresponse = gson.fromJson(response.body(), ReturnValues.class);
+//            
+//            // Verifica a variavel e exibe a resposta
+//            if(Jresponse.getLight()) {
+//            	System.out.println("A luz est· ligada");
+//            } else if(!Jresponse.getLight()) {
+//            	System.out.println("A luz est· desligada");
+//            } else {
+//            	System.out.println("N„o foi possivel reconhecer o estado da luz");
+//            }
+//            
        } catch (Exception e) {
            e.printStackTrace();
        }
