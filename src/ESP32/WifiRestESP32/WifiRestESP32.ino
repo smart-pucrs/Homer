@@ -1,7 +1,8 @@
 #include "WiFi.h"
 #include "aREST.h"
+#define LightPin 15
 
- //ConfiguraÁ„o e inicializaÁ„o do Rest
+// Configura√ß√£o e inicializa√ß√£o do Rest
 aREST rest = aREST();
 WiFiServer server(80);
  
@@ -14,12 +15,14 @@ void setup() {
  
   Serial.begin(115200); // Inicializa o console da IDE com o ESP32
 
-  // Configura informaÁıes do Rest
+   pinMode(LightPin, INPUT_PULLUP); // Configura√ß√£o do pino do sensor
+   
+  // Configura informa√ß√µes do Rest
   rest.set_id("001");
   rest.set_name("Sensor");
   rest.variable("Light",&Light); // Indica a variavel Light para ser checada pelo Rest
+  rest.function("checkLight", checkLight);
 
-  Light = true;
   
   WiFi.begin(ssid, password); // Conecta no Wifi
   while (WiFi.status() != WL_CONNECTED) {
@@ -27,15 +30,14 @@ void setup() {
     Serial.print(".");
   }
   
-  //Mostra o IP da placa para fazer a conex„o com o Homer
+  // Mostra o IP da placa para fazer a conex√£o com o Homer
   Serial.println("WiFi connected with IP: "); 
   Serial.println(WiFi.localIP());
  
   server.begin();
 }
  
-void loop() {
-  
+void loop() { // Mantem a placa como servidor
   WiFiClient client = server.available();
   if (client) {
     while(!client.available()){
@@ -43,4 +45,18 @@ void loop() {
     }
     rest.handle(client);
   }
+}
+
+int checkLight(String command){ //Fun√ß√£o que checa o sensor e atualiza a variavel
+   int L =digitalRead(LightPin);
+  if(L == 1){
+    Serial.print(" Value: "); Serial.print(L); Serial.print(" |");
+    Serial.println(" Light is OFF |");
+    Light = false;
+  } else {
+    Serial.print(" Value: "); Serial.print(L); Serial.print(" |");
+    Serial.println(" Ligh is ON |");
+    Light = true;
+  }
+  return 1;
 }
