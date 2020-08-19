@@ -1,5 +1,3 @@
-// CArtAgO artifact code for project Homer
-
 package homer;
 
 import java.util.ArrayList;
@@ -31,7 +29,10 @@ public class VisionArtifact extends Artifact {
 				}			
 				objectNames.set(localizedObjects.toArray(new Literal[localizedObjects.size()]));				
 			} catch (Exception e) {
-				System.out.println("Erro ao detectar objetos: " + e);
+				System.out.println("%n%n========================ERRO==========================%n");
+				System.out.println("Erro ao detectar objetos: ");
+				System.out.println(e);
+				System.out.println("%n======================================================%n%n");
 				Literal l = ASSyntax.createLiteral("objectRepresentation", ASSyntax.createString("Erro"));
 				localizedObjects.add(l);
 				objectNames.set(localizedObjects.toArray(new Literal[localizedObjects.size()]));

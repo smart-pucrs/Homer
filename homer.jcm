@@ -41,12 +41,13 @@ mas homer {
     
     agent control1 : controller.asl{ 
       instances: 1
-      focus: integration, vision
+      focus: integration, vision, lights
     }
     
     workspace wp{
     	artifact integration:br.pucrs.smart.IntegrationArtifact
     	artifact vision:homer.VisionArtifact
+    	artifact lights:homer.LightsArtifact
     }
     
     

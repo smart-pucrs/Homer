@@ -22,7 +22,7 @@ public class CheckLights {
 	
 	public static void main(String[] args) {
 		try {
-			// Envia uma solicita√ß√£o de variavel para o ESP32
+			// Envia uma solicitaÁ„o de variavel para o ESP32
 			System.out.print("Enviando Request ao ESP32... ");
        	 	HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder() // Request  para  atualizar a valor do sensor 
@@ -44,15 +44,15 @@ public class CheckLights {
             
             // Verifica a variavel e exibe a resposta
             if(Jresponse.getLight()) {
-            	System.out.println("A luz est√° ligada");
+            	System.out.println("A luz est· ligada");
             } else if(!Jresponse.getLight()) {
-            	System.out.println("A luz est√° desligada");
+            	System.out.println("A luz est· desligada");
             } else {
-            	System.out.println("N√£o foi possivel reconhecer o estado da luz");
+            	System.out.println("N„o foi possivel reconhecer o estado da luz");
             }
             
        } catch (Exception e) {
-    	    System.out.printf("\nN√£o foi possivel conectar ao ESP32");
+    	    System.out.printf("\n N„o foi possivel conectar ao ESP32");
     	   // e.printStackTrace();
        }
 	}

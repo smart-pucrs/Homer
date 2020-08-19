@@ -42,20 +42,56 @@ getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], O
 +!responder(ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Get Objects In The Scene")
 <-
-	.print("Chatbot solicitando informação sobre os objetos na imagem.")
+	.print("Chatbot solicitando informação sobre os objetos na imagem.");
 	!informObjects(List);
-	!montarResposta(List, Response);	
-	.print("Respondendo para o chatbot: ", Response)
+	!generateResponse(List, Response);	
+	.print("Respondendo para o chatbot: ", Response);
 	reply(Response);
 	.
 	
 +!responder(ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "Get specific object")
 <-
-	.print("Chatbot solicitando localização de objeto.")
+	.print("Chatbot solicitando localização de objeto.");
 	!informObjects(List);
 	!locateObject(Params, List, Response)	
-	.print("Respondendo para o chatbot: ", Response)
+	.print("Respondendo para o chatbot: ", Response);
+	reply(Response);
+	.
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Turn On The Light")
+<-
+	.print("Chatbot solicitando para ligar a luz.");
+	!turnOnTheLight(Params, Response);
+	.print("Respondendo para o chatbot: ", Response);
+	reply(Response);
+	.
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Turn Off The Light")
+<-
+	.print("Chatbot solicitando para desligar a luz.");
+	!turnOffTheLight(Params, Response);
+	.print("Respondendo para o chatbot: ", Response);
+	reply(Response);
+	.
+
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Check Light")
+<-
+	.print("Chatbot solicitando para verificar status da luz.");
+	!checkLight(Params, Response);
+	.print("Respondendo para o chatbot: ", Response);
+	reply(Response);
+	.
+
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Check All Lights")
+<-
+	.print("Chatbot solicitando para verificar status de todas as luzes.");
+	!checkAllLights(Response);
+	.print("Respondendo para o chatbot: ", Response);
 	reply(Response);
 	.
 	
@@ -65,48 +101,48 @@ getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], O
 	reply("Desculpe, não reconheço essa intensão");
 	.
 
-+!desmembrarItens([], Temp, Response)
++!dismemberItems([], Temp, Response)
 <-
 	Response = Temp;
 	.
 
-+!desmembrarItens([objectRepresentation(Status)|RestOfTheList], Temp, Response)
++!dismemberItems([objectRepresentation(Status)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length < 1
 <-
 	Response = "Desculpe-me, houve um erro e não consegui verificar";
 	.
-+!desmembrarItens([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
++!dismemberItems([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length > 1
 <-
 	.concat(Temp, "O objeto ", Nome, " está ", Localizacao, ", ", Resp);	
-	!desmembrarItens(RestOfTheList, Resp, Response);
+	!dismemberItems(RestOfTheList, Resp, Response);
 	.
-+!desmembrarItens([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
++!dismemberItems([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length == 1
 <-
 	.concat(Temp, "O objeto ", Nome, " está ", Localizacao, " e ", Resp);	
-	!desmembrarItens(RestOfTheList, Resp, Response);
+	!dismemberItems(RestOfTheList, Resp, Response);
 	.
-+!desmembrarItens([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
++!dismemberItems([objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], Temp, Response)
 	: .length(RestOfTheList,Length) & Length < 1
 <-
 	.concat(Temp, "O objeto ", Nome, " está ", Localizacao, ". ", Resp);
-	!desmembrarItens(RestOfTheList, Resp, Response);
+	!dismemberItems(RestOfTheList, Resp, Response);
 	.
 
-+!montarResposta(List, Response)
++!generateResponse(List, Response)
 	: .length(List,Length) & Length > 1
 <-
 	.concat("Eu encontrei ", Length, " objetos, ", Temp);
-	!desmembrarItens(List, Temp, Response);
+	!dismemberItems(List, Temp, Response);
 	.
-+!montarResposta(List, Response)
++!generateResponse(List, Response)
 	: .length(List,Length) & Length == 1
 <-
 	.concat("Eu encontrei ", Length, " objeto, ", Temp);
-	!desmembrarItens(List, Temp, Response);
+	!dismemberItems(List, Temp, Response);
 	.
-+!montarResposta(List, Response)
++!generateResponse(List, Response)
 	: .length(List,Length) & Length < 1
 <-
 	Response = "Eu não encontrei nenhum objeto.";
@@ -151,6 +187,169 @@ getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], O
     .print(List);
     .
 
++!turnOnTheLight([], Response)
+<-
+	Response = "Desculpe-me, não compreendi de qual cômodo devo ligar a luz";
+	.
++!turnOnTheLight([param(Key, Value)|RestOfTheList], Response)
+	: (Key == "room")
+<-
+	turnOnTheLight(Value, Status); //Status = lightStatus(Cômodo, Status)
+	!checkIfLit(Status, Response);
+	.
++!turnOnTheLight([param(Key, Value)|RestOfTheList], Response)
+	: (Key \== "room")
+<-
+	!turnOnTheLight(RestOfTheList, Response);
+	.
+
++!checkIfLit(lightStatus(Room, Status), Response)
+	: (Status == "On")
+<-
+	.concat("Ok, a luz do cômodo ", Room, " agora está ligada", Response);
+	.
+
++!checkIfLit(lightStatus(Room, Status), Response)
+	: (Status == "Off")
+<-
+	.concat("Não consegui ligar a luz do cômodo ", Room, Response);	
+	.
+
++!checkIfLit(lightStatus(Room, Status), Response)
+	: (Status == "Erro")
+<-
+	.concat("Desculpe-me, houve um erro e eu não consegui verificar o status da luz do cômodo ", Room, Response);
+	.
+
++!checkIfLit(lightStatus(Room, Status), Response)
+	: (Status == "Not implemented")
+<-
+
+	.concat("Em breve serei capaz de ligar a luz do cômodo ", Room, Response);
+	.
+
++!turnOffTheLight([], Response)
+<-
+	Response = "Desculpe-me, não compreendi de qual cômodo devo desligar a luz";
+	.
++!turnOffTheLight([param(Key, Value)|RestOfTheList], Response)
+	: (Key == "room")
+<-
+	turnOffTheLight(Value, Status); //Status = lightStatus(Cômodo, Status)
+	!checkIfTheLightIsOff(Status, Response);
+	.
++!turnOffTheLight([param(Key, Value)|RestOfTheList], Response)
+	: (Key \== "room")
+<-
+	!turnOffTheLight(RestOfTheList, Response);
+	.
+
++!checkIfTheLightIsOff(lightStatus(Room, Status), Response)
+	: (Status == "Off")
+<-
+	.concat("Ok, a luz do cômodo ", Room, " agora está desligada", Response);
+	.
+
++!checkIfTheLightIsOff(lightStatus(Room, Status), Response)
+	: (Status == "On")
+<-
+	.concat("Não consegui desligar a luz do cômodo ", Room, Response);	
+	.
+
++!checkIfTheLightIsOff(lightStatus(Room, Status), Response)
+	: (Status == "Erro")
+<-
+	.concat("Desculpe-me, houve um erro e eu não consegui verificar o status da luz do cômodo ", Room, Response);
+	.
+
++!checkIfTheLightIsOff(lightStatus(Room, Status), Response)
+	: (Status == "Not implemented")
+<-
+
+	.concat("Em breve serei capaz de desligar a luz do cômodo ", Room, Response);
+	.
+
++!checkLight([], Response)
+<-
+	Response = "Desculpe-me, não compreendi de qual cômodo devo verificar";
+	.
++!checkLight([param(Key, Value)|RestOfTheList], Response)
+	: (Key == "room")
+<-
+	checkAllLights(LightsStatus); //LightsStatus = [lightStatus(Cômodo, Status)]
+	!checkLightStatus(LightsStatus, Value, Response);
+	.
++!checkLight([param(Key, Value)|RestOfTheList], Response)
+	: (Key \== "room")
+<-
+	!checkLight(RestOfTheList, Response);
+	.
+
++!checkLightStatus([], RequestedRoom, Response)
+<-
+	.concat("Desculpe-me, eu não consegui verificar o status da luz do cômodo ", RequestedRoom, Response) ;
+	.
++!checkLightStatus([lightStatus(GeneralStatus)], RequestedRoom, Response)
+	: (GeneralStatus == "Erro")
+<-
+	.concat("Desculpe-me, houve um erro e eu não consegui verificar o status da luz do cômodo ", RequestedRoom, Response);
+	.
++!checkLightStatus([lightStatus(GeneralStatus)], RequestedRoom, Response)
+	: (GeneralStatus == "Not implemented")
+<-
+	.concat("Em breve serei capaz de lhe informar o status da luz do cômodo ", RequestedRoom, Response);
+	.
++!checkLightStatus([lightStatus(Room, Status)|RestOfTheList], RequestedRoom, Response)
+	: (Room \== RequestedRoom)
+<-
+	!checkLightStatus(RestOfTheList, RequestedRoom, Response);
+	.	
++!checkLightStatus([lightStatus(Room, Status)|RestOfTheList], RequestedRoom, Response)
+	: (Status == "On") & (Room == RequestedRoom)
+<-
+	.concat("A luz do cômodo ", Room, " está ligada", Response);
+	.
++!checkLightStatus([lightStatus(Room, Status)|RestOfTheList], RequestedRoom, Response)
+	: (Status == "Off") & (Room == RequestedRoom)
+<-
+	.concat("A luz do cômodo ", Room, " está desligada", Response);
+	.	
+
++!checkAllLights(Response)
+<-
+	checkAllLights(LightsStatus); //LightsStatus = [lightStatus(Cômodo, Status)]
+	!checkAllLightsStatus(LightsStatus, Response);
+	.
+
+/*	
+//=========================TODO============================
+	
++!checkAllLightsStatus([lightStatus(Room, Status)|RestOfTheList], Response)
+	: (Status == "On")
+<-
+	.concat("A luz do cômodo ", Room, " está ligada", Response);
+	.
+
++!checkAllLightsStatus([lightStatus(Room, Status)|RestOfTheList], Response)
+	: (Status == "Off")
+<-
+	.concat("A luz do cômodo ", Room, " está desligada", Response);	
+	.
+
+//=====================================================
+*/
++!checkAllLightsStatus([lightStatus(GeneralStatus)], Response)
+	: (GeneralStatus == "Erro")
+<-
+	Response = "Desculpe-me, houve um erro e eu não consegui verificar o status das luzes";
+	.
+
++!checkAllLightsStatus([lightStatus(GeneralStatus)], Response)
+	: (GeneralStatus == "Not implemented")
+<-
+	Response = "Em breve serei capaz de lhe informar o status das luzes";
+	.
+
 +!printInformedObjects([]).
 +!printInformedObjects([Item|RestOfTheList])
 <-
@@ -176,7 +375,7 @@ getLocation(Value, [objectRepresentation(Nome,_,_,Localizacao)|RestOfTheList], O
     : True
 <-
     !informObjects(List);
-	!montarResposta(List, Response);
+	!generateResponse(List, Response);
 	.print(Response)
     .
     
