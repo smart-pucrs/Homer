@@ -19,7 +19,9 @@ public class LightsArtifact extends Artifact {
 		System.out.println("Aqui será chamado o CheckLights...");
 		List<Object> lightStatusList = new ArrayList<Object>();
 		try {
-			Literal l = ASSyntax.createLiteral("lightStatus", ASSyntax.createString("Not implemented"));
+			String status = CheckLights.check();
+			Literal l = ASSyntax.createLiteral("lightStatus", ASSyntax.createString("quarto"));
+			l.addTerm(ASSyntax.createString(status));
 			lightStatusList.add(l);
 			lightsStatus.set(lightStatusList.toArray(new Literal[lightStatusList.size()]));
 		} catch (Exception e) {
@@ -72,4 +74,3 @@ public class LightsArtifact extends Artifact {
 		}
 	}
 }
-

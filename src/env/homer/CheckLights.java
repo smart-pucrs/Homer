@@ -20,8 +20,9 @@ public class CheckLights {
 
 	private static String ESP32IP = "ESP32_IP"; // Inserir o IP do ESP32 exibido no console da IDE da placa
 	
-	public static void main(String[] args) {
+	public static String check() {
 		try {
+			String status = null;
 			// Envia uma solicitação de variavel para o ESP32
 			System.out.print("Enviando Request ao ESP32... ");
        	 	HttpClient client = HttpClient.newHttpClient();
@@ -44,16 +45,20 @@ public class CheckLights {
             
             // Verifica a variavel e exibe a resposta
             if(Jresponse.getLight()) {
+            	status = "On";
             	System.out.println("A luz está ligada");
             } else if(!Jresponse.getLight()) {
+            	status = "Off";
             	System.out.println("A luz está desligada");
             } else {
+            	status = "Erro";
             	System.out.println("Não foi possivel reconhecer o estado da luz");
             }
-            
+            return status;
        } catch (Exception e) {
     	    System.out.printf("\n Não foi possivel conectar ao ESP32");
     	   // e.printStackTrace();
+    	    return "Erro";
        }
 	}
 }
