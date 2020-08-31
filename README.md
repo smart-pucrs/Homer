@@ -8,7 +8,8 @@ Você encontrará toda a documentação necessária para instalação e execuç�
 Para a integração entre o JaCaMo com Dialogflow foi usado o código disponível em [git](https://github.com/DeboraEngelmann/helloworld_from_jason), desenvolvido por [Débora Engelmann](https://github.com/DeboraEngelmann), 
 [Juliana Damasio Oliveira](https://github.com/julianadamasio), 
 [Olimar Teixeira Borges](https://github.com/olimarborges), 
-[Tabajara Krausburg](https://github.com/TabajaraKrausburg) e 
-[Marivaldo Vivan](https://github.com/Vivannaboa).
+[Tabajara Krausburg](https://github.com/TabajaraKrausburg), 
+[Marivaldo Vivan](https://github.com/Vivannaboa) e
+[Rafael H. Bordini](https://github.com/rbordini).
 
 
