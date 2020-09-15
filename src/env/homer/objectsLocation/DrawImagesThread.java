@@ -1,4 +1,4 @@
-package homer;
+package homer.objectsLocation;
 
 import java.awt.BasicStroke;
 import java.awt.Color;

@@ -1,4 +1,4 @@
-package homer;
+package homer.weather;
 
 public class OPWtest { // Classe de teste para exemplificar o uso da API e classe auxiliar criada
 	public static void main (String[] args) {

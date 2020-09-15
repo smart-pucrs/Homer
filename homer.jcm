@@ -46,8 +46,8 @@ mas homer {
     
     workspace wp{
     	artifact integration:br.pucrs.smart.IntegrationArtifact
-    	artifact vision:homer.VisionArtifact
-    	artifact lights:homer.LightsArtifact
+    	artifact vision:homer.objectsLocation.VisionArtifact
+    	artifact lights:homer.lightsControl.LightsArtifact
     }
     
     

@@ -1,4 +1,4 @@
-package homer;
+package homer.weather;
 
 import java.net.URI;
 import java.net.http.HttpClient;

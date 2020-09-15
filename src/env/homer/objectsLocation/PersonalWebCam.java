@@ -1,4 +1,4 @@
-package homer;
+package homer.objectsLocation;
 
 import java.awt.Dimension;
 import java.awt.image.RenderedImage;

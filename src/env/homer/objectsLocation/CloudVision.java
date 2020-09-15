@@ -1,4 +1,4 @@
-package homer;
+package homer.objectsLocation;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

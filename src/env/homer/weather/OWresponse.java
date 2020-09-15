@@ -1,4 +1,4 @@
-package homer;
+package homer.weather;
 
 import java.util.ArrayList;
 

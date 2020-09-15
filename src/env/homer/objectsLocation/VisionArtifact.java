@@ -1,4 +1,4 @@
-package homer;
+package homer.objectsLocation;
 
 import java.util.ArrayList;
 import java.util.List;

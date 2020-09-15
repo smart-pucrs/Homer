@@ -1,6 +1,6 @@
 // CArtAgO artifact code for project Homer
 
-package homer;
+package homer.lightsControl;
 
 import java.util.ArrayList;
 import java.util.List;

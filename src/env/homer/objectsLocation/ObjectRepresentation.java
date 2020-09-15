@@ -1,4 +1,4 @@
-package homer;
+package homer.objectsLocation;
 
 public class ObjectRepresentation {
     public String name;
