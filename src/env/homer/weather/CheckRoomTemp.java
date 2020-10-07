@@ -1,4 +1,4 @@
-package homer.lightsControl;
+package homer.weather;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -7,27 +7,27 @@ import java.net.http.HttpResponse;
 
 import com.google.gson.Gson;
 
-class ReturnValues {
-	private int return_value;
-	ReturnValues(){	
+public class CheckRoomTemp{
+	
+	class ReturnValues {
+		private int return_value;
+		ReturnValues(){	
+		}
+		public int getTemp() {
+			return return_value;
+		}
 	}
-	public int getLight() {
-		return return_value;
-	}
-}
-
-public class CheckLights {
 
 	private static String ESP32IP = "ESP32_IP"; // Inserir o IP do ESP32 exibido no console da IDE da placa
 	
-	public static String check() {
+	public static void main(String args[]) {
 		try {
 			String status = null;
 			// Envia uma solicitação de variavel para o ESP32
 			System.out.print("Enviando Request ao ESP32... ");
        	 	HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder() // Request para atualizar e retornar valor do sensor 
-                    .uri(URI.create("http://" + ESP32IP + "/checkLight")) 
+                    .uri(URI.create("http://" + ESP32IP + "/checkTemp")) 
                     .build();
             HttpResponse<String> response = client.send(request,
             			HttpResponse.BodyHandlers.ofString());
@@ -37,23 +37,16 @@ public class CheckLights {
             // Organiza a resposta em JSON
             Gson gson = new Gson();
             ReturnValues Jresponse = gson.fromJson(response.body(), ReturnValues.class);
-            
-            // Verifica a variavel e exibe a resposta
-            if(Jresponse.getLight() == 0) {
-            	status = "On";
-            	System.out.println("A luz está ligada");
-            } else if(Jresponse.getLight() == 1) {
-            	status = "Off";
-            	System.out.println("A luz está desligada");
+            if(!(Jresponse.getTemp() > 100)) {
+            	System.out.printf("Temperatura: %d ºC",Jresponse.getTemp());
             } else {
-            	status = "Erro";
-            	System.out.println("Não foi possivel reconhecer o estado da luz");
+            	System.out.println("Erro no sensor");
             }
-            return status;
+            
+           
        } catch (Exception e) {
     	    System.out.printf("\n Não foi possivel conectar ao ESP32");
     	    // e.printStackTrace();
-    	    return "Erro";
        }
 	}
 }
