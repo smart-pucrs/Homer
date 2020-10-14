@@ -1,7 +1,6 @@
 // CArtAgO artifact code for project helloworld_from_jason
 
 package br.pucrs.smart;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,8 +63,8 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 				execInternalOp("createRequestBelief", responseId, intentName, parameters, outputContexts);
 				System.out.println("Definindo propriedade observavel");
 			} else {
-				System.out.println("Não foi possível definir a propriedade observavel");
-				response.setFulfillmentText("Intensão não reconhecida");
+				System.out.println("Nao foi possivel definir a propriedade observavel");
+				response.setFulfillmentText("Intensao nao reconhecida");
 			}
 		}
 		int i = 0;
@@ -137,7 +136,7 @@ public class IntegrationArtifact extends Artifact implements IAgent {
 		    	terms.add(l);
 		    } else {
 		    	
-		    	System.out.println("Valor do parâmetro " + key + " informados em formato desconhecido" + value.getClass());
+		    	System.out.println("Valor do parametro " + key + " informados em formato desconhecido" + value.getClass());
 		    }
 		}
 		return ASSyntax.createList(terms);

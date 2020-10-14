@@ -20,7 +20,8 @@ mas homer {
     
 
    agent device1 : devices.asl{ 
-      instances: 5
+      instances: 1
+      focus: lights
     }
     
     agent sup1 : supervisor.asl{ 
@@ -29,6 +30,7 @@ mas homer {
     
     agent location1 : location.asl{ 
       instances: 1
+      focus: vision
     }
     
     agent security1 : security.asl{ 
@@ -37,17 +39,19 @@ mas homer {
     
     agent enter1 : entertainment.asl{ 
       instances: 1
+      focus: weather
     }
     
     agent control1 : controller.asl{ 
       instances: 1
-      focus: integration, vision, lights
+      focus: integration
     }
     
     workspace wp{
     	artifact integration:br.pucrs.smart.IntegrationArtifact
     	artifact vision:homer.objectsLocation.VisionArtifact
     	artifact lights:homer.lightsControl.LightsArtifact
+    	artifact weather:homer.weather.WeatherArtifact
     }
     
     
@@ -62,7 +66,7 @@ mas homer {
 	        		 security1 security
 	        		 enter1 entertainment
 	        		 control1 controller
-	        		// debug 
+	        		 //debug 
 	    }
 
  
@@ -71,3 +75,4 @@ mas homer {
       platform: br.pucrs.smart.RestArtifact("--main 2181 --restPort 8080")
 
 }
+

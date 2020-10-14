@@ -1,7 +1,6 @@
 // CArtAgO artifact code for project Homer
 
 package homer.lightsControl;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,13 +9,13 @@ import jason.asSyntax.ASSyntax;
 import jason.asSyntax.Literal;
 
 public class LightsArtifact extends Artifact {
-	void init(int initialValue) {
+	void init() {
 		System.out.println("init LightsArtifact");
 	}
 
 	@OPERATION
-	void checkAllLights(OpFeedbackParam<Literal[]> lightsStatus) { //[lightStatus(Cômodo, Status)]
-		System.out.println("Aqui será chamado o CheckLights...");
+	void checkAllLights(OpFeedbackParam<Literal[]> lightsStatus) { //[lightStatus(Comodo, Status)]
+		System.out.println("Aqui sera chamado o CheckLights...");
 		List<Object> lightStatusList = new ArrayList<Object>();
 		try {
 			String status = CheckLights.check();
@@ -37,8 +36,8 @@ public class LightsArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void turnOnTheLight(String room, OpFeedbackParam<Literal> lightStatus) { //lightStatus(Cômodo, Status)
-		System.out.println("Aqui será chamado o TurnOnTheLight passando o parâmetro " + room);
+	void turnOnTheLight(String room, OpFeedbackParam<Literal> lightStatus) { //lightStatus(Comodo, Status)
+		System.out.println("Aqui sera chamado o TurnOnTheLight passando o parametro " + room);
 		try {
 			Literal lightStatusResponse = ASSyntax.createLiteral("lightStatus", ASSyntax.createString(room));
 			lightStatusResponse.addTerm(ASSyntax.createString("Not implemented"));
@@ -46,7 +45,7 @@ public class LightsArtifact extends Artifact {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("%n%n========================ERRO==========================%n");
-			System.out.println("Erro ao ligar a luz do cômodo: "+ room);
+			System.out.println("Erro ao ligar a luz do comodo: "+ room);
 			System.out.println(e);
 			System.out.println("%n======================================================%n%n");
 			Literal lightStatusResponse = ASSyntax.createLiteral("lightStatus", ASSyntax.createString(room));
@@ -56,8 +55,8 @@ public class LightsArtifact extends Artifact {
 	}
 	
 	@OPERATION
-	void turnOffTheLight(String room, OpFeedbackParam<Literal> lightStatus) { //lightStatus(Cômodo, Status)
-		System.out.println("Aqui será chamado o TurnOffTheLight passando o parâmetro " + room);
+	void turnOffTheLight(String room, OpFeedbackParam<Literal> lightStatus) { //lightStatus(Comodo, Status)
+		System.out.println("Aqui sera chamado o TurnOffTheLight passando o parametro " + room);
 		try {
 			Literal lightStatusResponse = ASSyntax.createLiteral("lightStatus", ASSyntax.createString(room));
 			lightStatusResponse.addTerm(ASSyntax.createString("Not implemented"));
@@ -65,7 +64,7 @@ public class LightsArtifact extends Artifact {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("%n%n========================ERRO==========================%n");
-			System.out.println("Erro ao desligar a luz do cômodo: "+ room);
+			System.out.println("Erro ao desligar a luz do comodo: "+ room);
 			System.out.println(e);
 			System.out.println("%n======================================================%n%n");
 			Literal lightStatusResponse = ASSyntax.createLiteral("lightStatus", ASSyntax.createString(room));

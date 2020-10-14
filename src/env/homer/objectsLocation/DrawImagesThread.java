@@ -1,5 +1,4 @@
 package homer.objectsLocation;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -26,11 +25,11 @@ public class DrawImagesThread extends Thread {
 		this.objs = objs;
 	}
 
-	// Função para localizar aquivos de entrada e saida da imagem
+	// Funcao para localizar aquivos de entrada e saida da imagem
 	public void run() {
 		try {
 			String outputPath = PersonalWebCam.getOutputPath().substring(0, PersonalWebCam.getOutputPath().indexOf(".jpg")) + "-output.jpg"; 
-			System.out.println("Executando Thread Assíncrona!");
+			System.out.println("Executando Thread Assincrona!");
 			File imgtest = new File(PersonalWebCam.getOutputPath());
 			FileInputStream imgtd;
 
@@ -40,14 +39,14 @@ public class DrawImagesThread extends Thread {
 			drawImages(img, objs);
 			Path outputP = Paths.get(outputPath);
 			ImageIO.write(img, "jpg", outputP.toFile());
-			System.out.format("Thread Assíncrona: Done !%n%n");
+			System.out.format("Thread Assincrona: Done !%n%n");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	// Função para desenhar os objetos na imagem
+	// Funcao para desenhar os objetos na imagem
 	public static void drawImages(BufferedImage img, List<LocalizedObjectAnnotation> objs) {
 		for (LocalizedObjectAnnotation entity : objs) {
 			double[][] objBoundCords = CloudVision.wrapCords(entity.getBoundingPoly().getNormalizedVerticesList().toString());
@@ -57,7 +56,7 @@ public class DrawImagesThread extends Thread {
 
 	}
 
-	// Função que desenha os contornos dos objetos de acordo com as cordenadas
+	// Funcao que desenha os contornos dos objetos de acordo com as cordenadas
 	public static void drawImage(BufferedImage img, LocalizedObjectAnnotation entity, ObjectRepresentation obj) {
 		Graphics2D gfx = img.createGraphics();
 
@@ -87,7 +86,7 @@ public class DrawImagesThread extends Thread {
 		drawCenter(gfx, obj, scaleX, scaleY);
 	}
 
-	// Função que desenha o centro da imagem
+	// Funcao que desenha o centro da imagem
 	public static void drawCenter(Graphics2D gfx, ObjectRepresentation obj, int scaleX, int scaleY) {
 		double[] xy = obj.getObjCenter();
 		Path2D poly2 = new Path2D.Double();

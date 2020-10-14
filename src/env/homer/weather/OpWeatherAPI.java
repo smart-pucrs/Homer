@@ -1,5 +1,4 @@
 package homer.weather;
-
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -20,7 +19,7 @@ public class OpWeatherAPI {
 		tm =  new TimeManager();
 	}
 	
-	private void makeRequest() { //Fun√ß√£o que envia request para API
+	private void makeRequest() { //FunÁ„o que envia request para API
 		try {
 			HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder() 
@@ -38,7 +37,7 @@ public class OpWeatherAPI {
 		}
 	}
 	
-	public String previsaoDia(int d) { // Fun√ß√£o para buscar a previs√£o de um dia especifico
+	public String previsaoDia(int d) { // FunÁ„o para buscar a previs„o de um dia especifico
 		makeRequest();
 		ArrayList<OWresponse.Daily> daily = wResponse.getDaily();
 		OWresponse.Daily theDay = null;
@@ -47,12 +46,12 @@ public class OpWeatherAPI {
 				theDay = day;
 			}
 		}
-		String previsao = "Dia %d far√° %.0f graus e ";
+		String previsao = "Dia %d far· %.0f graus e ";
 		ArrayList<String> wcs = theDay.getWeather();
 		if (wcs.size() < 2) {
-			previsao += "a condi√ß√£o do tempo ser√°: " + wcs.get(0);
+			previsao += "a condiÁ„o do tempo ser·: " + wcs.get(0);
 		} else {
-			previsao += "as condi√ß√µes do tempo ser√£o: ";
+			previsao += "as condiÁıes do tempo ser„o: ";
 			for (String wc : wcs) {
 				if (wcs.size() -1 != wcs.indexOf(wc) ) {
 					previsao += wc + ", ";	
@@ -66,17 +65,17 @@ public class OpWeatherAPI {
 	}
 	
 	
-	public String boaNoite() { // Fun√ß√£o para ser usada quando usu√°rio for dormir (informa√ß√µes sobre o pr√≥ximo dia)
+	public String boaNoite() { // FunÁ„o para ser usada quando usu·rio for dormir (informaÁıes sobre o prÛximo dia)
 		makeRequest();
 		ArrayList<OWresponse.Daily> daily = wResponse.getDaily();
 		OWresponse.Current current = wResponse.getCurrent();
-		String result = String.format("a temperatura atual √© %.0f graus , amanh√£ a m√°xima ser√° de %.0f e a minima %.0f, %s", 
+		String result = String.format("a temperatura atual È %.0f graus , amanh„ a m·xima ser· de %.0f e a minima %.0f, %s", 
 				current.getTemp(), daily.get(1).getMinMax()[1], daily.get(1).getMinMax()[0], choverAmanha());
 		return result;
 	}
 	
 	
-	public String bomDia() { // Fun√ß√£o para ser usada quando o usu√°rio acordar (informa√ß√µes sobre o dia em quest√£o)
+	public String bomDia() { // FunÁ„o para ser usada quando o usu·rio acordar (informaÁıes sobre o dia em quest„o)
 		makeRequest();
 		ArrayList<OWresponse.Hourly> hourly = wResponse.getHourly();
 		ArrayList<OWresponse.Daily> daily = wResponse.getDaily();
@@ -89,19 +88,19 @@ public class OpWeatherAPI {
 				break;
 			}
 		}
-		String result = String.format("a temperatura atual √© %.0f graus , a m√°xima ser√° de %.0f e a minima %.0f, ", 
+		String result = String.format("a temperatura atual È %.0f graus , a m·xima ser· de %.0f e a minima %.0f, ", 
 									current.getTemp(), daily.get(0).getMinMax()[1], daily.get(0).getMinMax()[0]);
 		
 		if(rainHour == 0) {
-			result += "n√£o est√° previsto chuva";
+			result += "n„o est· previsto chuva";
 		} else {
-			result += " est√° previsto chuva pr√≥ximo das " + rainHour + " horas, n√£o esque√ßa do guarda-chuva, ";
+			result += " est· previsto chuva prÛximo das " + rainHour + " horas, n„o esqueÁa do guarda-chuva, ";
 		}
 		
 		if (wcs.size() < 2) {
-			result += "a condi√ß√£o do tempo √© " + wcs.get(0);
+			result += "a condiÁ„o do tempo È " + wcs.get(0);
 		} else {
-			result += "as condi√ß√µes do tempo de s√£o: ";
+			result += "as condiÁıes do tempo de s„o: ";
 			for (String wc : wcs) {
 				if (wcs.size() -1 != wcs.indexOf(wc) ) {
 					result += wc + ", ";	
@@ -114,26 +113,26 @@ public class OpWeatherAPI {
 	}
 		
 	
-	public String choverAmanha() { // Fun√ß√£o para saber se ir√° chover no dia seguinte 
+	public String choverAmanha() { // FunÁ„o para saber se ir· chover no dia seguinte 
 		String result = "" ;
 		makeRequest();
 		ArrayList<OWresponse.Daily> daily = wResponse.getDaily();
 		if (!daily.get(1).hasRain()) {
-			result += "n√£o ";
+			result += "n„o ";
 		}
-		result += "est√° previsto chuva";
+		result += "est· previsto chuva";
 		return result;
 	}
 	
-	public String WeatherCondition() {  // Fun√ß√£o auxiliar para retornar a condi√ß√£o do tempo 
+	public String WeatherCondition() {  // FunÁ„o auxiliar para retornar a condiÁ„o do tempo 
 		makeRequest();
 		OWresponse.Current current = wResponse.getCurrent();
 		ArrayList<String> wcs = current.getWeather();
 		String result = "";
 		if (wcs.size() < 2) {
-			result = "a condi√ß√£o do tempo de hoje √© " + wcs.get(0);
+			result = "a condiÁ„o do tempo de hoje È " + wcs.get(0);
 		} else {
-			result = "as condi√ß√µes do tempo de hoje s√£o:";
+			result = "as condiÁıes do tempo de hoje s„o:";
 			for (String wc : wcs) {
 				if (wcs.size() -1 != wcs.indexOf(wc) ) {
 					result += wc + ", ";	
@@ -145,14 +144,14 @@ public class OpWeatherAPI {
 		return result;
 	}
 	
-	public String tempoDeSol() { // Fun√ß√£o que retorna quando o sol nasce e se p√µe
+	public String tempoDeSol() { // FunÁ„o que retorna quando o sol nasce e se pıe
 		makeRequest();
 		OWresponse.Current current = wResponse.getCurrent();
-		return "Hoje o sol nasce as " + tm.toTime(current.getSunrise()) +  " e se p√µe as " + tm.toTime(current.getSunset());
+		return "Hoje o sol nasce as " + tm.toTime(current.getSunrise()) +  " e se pıe as " + tm.toTime(current.getSunset());
 	}
 	
 	
-	// Classe auxuliar para lidar com datas e a convers√£o de tempo Epoch
+	// Classe auxuliar para lidar com datas e a convers„o de tempo Epoch
 	private class TimeManager {
 		private LocalDateTime tm;
 		ZoneOffset zost;
@@ -162,7 +161,7 @@ public class OpWeatherAPI {
 			zost = ZoneOffset.of("-3");
 		}
 		
-		public String toTime(int dt) { // Converte e retorna o hor√°rio
+		public String toTime(int dt) { // Converte e retorna o hor·rio
 			tm  = LocalDateTime.ofEpochSecond(dt, 0, zost);
 			String hour = "";
 			String minute = "";
@@ -177,7 +176,7 @@ public class OpWeatherAPI {
 			return tm.getHour();
 		}
 		
-		public int toDay(int dt) { // Converte e restorna o dia do m√™s
+		public int toDay(int dt) { // Converte e restorna o dia do mÍs
 			tm  = LocalDateTime.ofEpochSecond(dt, 0, zost);
 			return tm.getDayOfMonth();
 			

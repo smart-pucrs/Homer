@@ -1,8 +1,7 @@
 package homer.weather;
-
 import java.util.ArrayList;
 
-public class OWresponse { // Classe com informações de retorno da API
+public class OWresponse { // Classe com informa��es de retorno da API
 	private Current current;
 	private Daily[] daily = new Daily[8];
 	private Hourly[] hourly =  new Hourly[23];
@@ -27,7 +26,7 @@ public class OWresponse { // Classe com informações de retorno da API
 		return hours;
 	}
 	
-	/* Classes auxiliares contidas dentro de cada tipo de previsão (atual, dias, horas) =========================== */
+	/* Classes auxiliares contidas dentro de cada tipo de previs�o (atual, dias, horas) =========================== */
 	private class Weather {
 		private int id;
 		private String main, description;
@@ -230,5 +229,6 @@ public class OWresponse { // Classe com informações de retorno da API
 	} 
 	
 }
+
 
 

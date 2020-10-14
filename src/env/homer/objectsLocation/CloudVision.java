@@ -1,5 +1,6 @@
 package homer.objectsLocation;
 
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -25,10 +26,10 @@ public class CloudVision {
 		System.out.format("|======Teste======|%n");
 		  List<ObjectRepresentation> returnObjectArr = new ArrayList<>();
 		  
-		  // Configuração de conexão com API de tradução
+		  // Configuracao de conexao com API de traducao
 		  Translate translate = TranslateOptions.getDefaultInstance().getService(); 
 
-		  // Configuração para a API de detecção
+		  // Configuracao para a API de deteccao
 	      List<AnnotateImageRequest> requests = new ArrayList<>();
 	      
 
@@ -69,7 +70,7 @@ public class CloudVision {
 	            
 	            double[][] objBoundCords  = wrapCords(entity.getBoundingPoly().getNormalizedVerticesList().toString());
 	            
-	            Translation translation = translate.translate( entity.getName(), // Especificações da tradução
+	            Translation translation = translate.translate( entity.getName(), // Especificacoes da traducao
 	            	     Translate.TranslateOption.sourceLanguage("en"),
 	            	     Translate.TranslateOption.targetLanguage("pt"),
 	            	           Translate.TranslateOption.model("base"));
@@ -106,7 +107,7 @@ public class CloudVision {
 		return returnObjectArr;
 	    }
 	
-	// Função para formatar as cordenadas em array
+	// Funcao para formatar as cordenadas em array
 	public static double[][] wrapCords(String cords) {
 		double[][] objBoundCords = new double[4][2];
 		double x1, y1, x2, y2, x3, y3, x4, y4;
