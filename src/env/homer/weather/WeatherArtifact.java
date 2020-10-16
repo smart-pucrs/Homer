@@ -3,6 +3,7 @@
 package homer.weather;
 
 import cartago.*;
+import homer.weather.OpWeatherAPI.DayOutOfRangeException;
 
 public class WeatherArtifact extends Artifact {
 	OpWeatherAPI wStation = null;
@@ -15,14 +16,21 @@ public class WeatherArtifact extends Artifact {
 	void dayForecast(Byte day, OpFeedbackParam<String> forecast) {	
 		try {
 			forecast.set(wStation.previsaoDia(day));
+		} catch (DayOutOfRangeException e) { 
+			errorMessage(e, day);
+			forecast.set("Desculpe-me, posso somente verificar a previsao de hoje ate dia " + e.getLastDay()[1]) ;
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			System.out.println("%n%n========================ERRO==========================%n");
-			System.out.println("Erro ao checar previsao para o dia: "+ day);
-			System.out.println(e);
-			System.out.println("%n======================================================%n%n");
-			forecast.set("Desculpe-me, houve um erro ao verificar a previsao para o dia " + day);		
-		}
+			errorMessage(e, day);
+			forecast.set("Desculpe-me, houve um erro ao verificar a previsao para o dia " + day);	
+		} 
+	}
+	
+	public void errorMessage(Exception e, int day) {
+		System.out.println("%n%n========================ERRO==========================%n");
+		System.out.println("Erro ao checar previsao para o dia: "+ day);
+		System.out.println(e);
+		System.out.println("%n======================================================%n%n");
 	}
 	
 }
