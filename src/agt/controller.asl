@@ -78,6 +78,48 @@
 	.
 	
 +!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Good Night")
+<-
+	.print("Chatbot dando Boa noite");
+	.send(enter1,question,goodNight);
+	.
+		
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Good Morning")
+<-
+	.print("Chatbot dando Bom Dia");
+	.send(enter1,question,goodMorning);
+	.
+		
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Tomorrow Forecast")
+<-
+	.print("Chatbot pedindo previsão para amanhã");
+	.send(enter1,question,tomorrowForecast);
+	.	
+		
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "About Sun")
+<-
+	.print("Chatbot pedindo informação sobre os horários do sol");
+	.send(enter1,question,aboutSun);
+	.
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Current Temperature")
+<-
+	.print("Chatbot pedindo a temperatura atual");
+	.send(enter1,question,currentTemperature);
+	.	
+	
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Get Current Humidity")
+<-
+	.print("Chatbot pedindo a umidade atual");
+	.send(enter1,question,currentHumidity);
+	.	
+
++!responder(ResponseId, IntentName, Params, Contexts)
 	: true
 <-
 	reply("Desculpe, nao reconheco essa intensao");

@@ -1,4 +1,5 @@
 package homer.weather;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -19,7 +20,8 @@ public class CheckRoomHum {
 
 private static String ESP32IP = "ESP32_IP"; // Inserir o IP do ESP32 exibido no console da IDE da placa
 	
-	public static void main(String args[]) {
+//	public static void main(String args[]) {
+	public static String currentHumidity() {
 		try {
 			String status = null;
 			// Envia uma solicitação de variavel para o ESP32
@@ -36,16 +38,19 @@ private static String ESP32IP = "ESP32_IP"; // Inserir o IP do ESP32 exibido no 
             // Organiza a resposta em JSON
             Gson gson = new Gson();
             ReturnValues Jresponse = gson.fromJson(response.body(), ReturnValues.class);
+            String resp;
             if(!(Jresponse.getHum() > 150)) {
-            	 System.out.printf("Humidade: %d%%",Jresponse.getHum());
+            	resp = "A umidade atual e " + Jresponse.getHum();            	
             } else {
-            	System.out.println("Erro no sensor");
+            	resp = "Desculpe, houve um erro no sensor";
             }
+            return resp;
            
             
            
        } catch (Exception e) {
     	    System.out.printf("\n Não foi possivel conectar ao ESP32");
+    	    return "Desculpe, houve um erro e nao consegui localizar o sensor de umidade";
     	    //e.printStackTrace();
        }
 	}

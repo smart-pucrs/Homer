@@ -19,10 +19,11 @@ public class CheckRoomTemp{
 
 	private static String ESP32IP = "ESP32_IP"; // Inserir o IP do ESP32 exibido no console da IDE da placa
 	
-	public static void main(String args[]) {
+//	public static void main(String args[]) {
+	public static String currentTemperature() {
 		try {
 			String status = null;
-			// Envia uma solicitação de variavel para o ESP32
+			// Envia uma solicitaÃ§Ã£o de variavel para o ESP32
 			System.out.print("Enviando Request ao ESP32... ");
        	 	HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder() // Request para atualizar e retornar valor do sensor 
@@ -36,15 +37,17 @@ public class CheckRoomTemp{
             // Organiza a resposta em JSON
             Gson gson = new Gson();
             ReturnValues Jresponse = gson.fromJson(response.body(), ReturnValues.class);
+            String resp;
             if(!(Jresponse.getTemp() > 100)) {
-            	System.out.printf("Temperatura: %d ºC",Jresponse.getTemp());
+            	resp = "A temperatura atual e " + Jresponse.getTemp() + "ºC";            	
             } else {
-            	System.out.println("Erro no sensor");
+            	resp = "Desculpe, houve um erro no sensor";
             }
-            
+            return resp;
            
        } catch (Exception e) {
-    	    System.out.printf("\n Não foi possivel conectar ao ESP32");
+    	    System.out.printf("\n Nao foi possivel conectar ao ESP32");
+    	    return "Desculpe, houve um erro e nao consegui localizar o sensor de temperatura";
     	    // e.printStackTrace();
        }
 	}
