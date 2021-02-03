@@ -1,6 +1,5 @@
 package homer.objectsLocation;
 
-
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -89,7 +88,7 @@ public class CloudVision {
 			       
 			        // Muda o nome de objetos iguais
 			       if(n > 1) {
-			       	name = Tname + " " + String.valueOf(n);
+			       	name = Tname;// + " " + String.valueOf(n);
 			       } else {
 			       	name = Tname;
 			       }

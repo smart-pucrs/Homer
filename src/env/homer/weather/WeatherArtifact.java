@@ -1,4 +1,4 @@
-// CArtAgO artifact code for project Homer
+// CArtAgO artifact code for project Ju-Homer
 
 package homer.weather;
 
@@ -74,7 +74,7 @@ public class WeatherArtifact extends Artifact {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("%n%n========================ERRO==========================%n");
-			System.out.println("Erro ao checar horários do sol");
+			System.out.println("Erro ao checar horarios do sol");
 			System.out.println(e);
 			System.out.println("%n======================================================%n%n");
 			forecast.set("Desculpe-me, houve um erro ao verificar horarios do sol");

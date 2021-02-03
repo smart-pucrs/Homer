@@ -1,4 +1,5 @@
 package homer.weather;
+
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
@@ -23,7 +24,7 @@ public class CheckRoomTemp{
 	public static String currentTemperature() {
 		try {
 			String status = null;
-			// Envia uma solicitaÃ§Ã£o de variavel para o ESP32
+			// Envia uma solicitação de variavel para o ESP32
 			System.out.print("Enviando Request ao ESP32... ");
        	 	HttpClient client = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder() // Request para atualizar e retornar valor do sensor 
@@ -39,7 +40,7 @@ public class CheckRoomTemp{
             ReturnValues Jresponse = gson.fromJson(response.body(), ReturnValues.class);
             String resp;
             if(!(Jresponse.getTemp() > 100)) {
-            	resp = "A temperatura atual e " + Jresponse.getTemp() + "ºC";            	
+            	resp = "A temperatura atual e " + Jresponse.getTemp() + "graus celsius";            	
             } else {
             	resp = "Desculpe, houve um erro no sensor";
             }
