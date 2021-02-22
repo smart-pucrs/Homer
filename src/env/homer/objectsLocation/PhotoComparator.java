@@ -97,13 +97,13 @@ public class PhotoComparator {
 	}
 	
 	public static void main(String[] args) throws IOException, Exception {
-		String diretorioImagem1 = "C:\\Users\\Usuario\\Desktop\\Working\\11_IC_trabalhando\\imagens\\img1.jpeg";
-		String diretorioImagem2 = "C:\\Users\\Usuario\\Desktop\\Working\\11_IC_trabalhando\\imagens\\img2.jpeg";
+	//	String diretorioImagem1 = "C:\\Users\\Usuario\\Desktop\\Working\\11_IC_trabalhando\\imagens\\img1.jpeg";
+	//	String diretorioImagem2 = "C:\\Users\\Usuario\\Desktop\\Working\\11_IC_trabalhando\\imagens\\img2.jpeg";
 		
 		// Tira foto só da segunda imagem, a primeira contém a posição padrão dos objetos a serem comparados
 				
-		List<ObjectRepresentation> photo1 = CloudVision2.detectLocalizedObjects(diretorioImagem1);		
-		List<ObjectRepresentation> photo2 = CloudVision2.detectLocalizedObjects(diretorioImagem2);
+		List<ObjectRepresentation> photo1 = CloudVision.detectLocalizedObjects();		
+		List<ObjectRepresentation> photo2 = CloudVision.detectLocalizedObjects();
 		
 		PhotoComparator t1 = new PhotoComparator(photo1, photo2);
 		t1.Compare();
