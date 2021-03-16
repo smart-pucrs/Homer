@@ -1,5 +1,6 @@
 package homer.objectsLocation;
 
+
 public class ObjectRepresentation {
     public String name;
     public float confidence;
@@ -49,6 +50,22 @@ public class ObjectRepresentation {
     	double centerY = (objBoundCords[2][1] + objBoundCords[0][1])/2.0;
 
         String result = "x: " + String.valueOf(centerX) + " # y: " + String.valueOf(centerY);
+        
+        return result;
+    }
+    
+    public double objCenterX() {
+    	double centerX = (objBoundCords[1][0] + objBoundCords[0][0])/2.0;
+
+    	double result = centerX;
+        
+        return result;
+    }
+    
+    public double objCenterY() {
+    	double centerY = (objBoundCords[2][1] + objBoundCords[0][1])/2.0;
+
+    	double result = centerY;
         
         return result;
     }

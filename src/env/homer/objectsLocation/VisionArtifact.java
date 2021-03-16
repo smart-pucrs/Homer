@@ -23,7 +23,8 @@ public class VisionArtifact extends Artifact {
 					// objectRepresentation(nome, confidence, center, localizacao)
 					Literal l = ASSyntax.createLiteral("objectRepresentation", ASSyntax.createString(objectRepresentation.getName()));
 					l.addTerm(ASSyntax.createString(objectRepresentation.getConf()));
-					l.addTerm(ASSyntax.createString(objectRepresentation.objCenter()));
+					l.addTerm(ASSyntax.createNumber(objectRepresentation.objCenterX()));
+					l.addTerm(ASSyntax.createNumber(objectRepresentation.objCenterY()));
 					l.addTerm(ASSyntax.createString(objectRepresentation.getDegrees()));
 					localizedObjects.add(l);
 				}			
