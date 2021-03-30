@@ -101,7 +101,7 @@
 +!responder(ResponseId, IntentName, Params, Contexts)
 	: (IntentName == "About Sun")
 <-
-	.print("Chatbot pedindo informação sobre os horários do sol");
+	.print("Chatbot pedindo informaçãoo sobre os horários do sol");
 	.send(enter1,question,aboutSun);
 	.
 	
@@ -119,6 +119,13 @@
 	.send(enter1,question,currentHumidity);
 	.	
 
++!responder(ResponseId, IntentName, Params, Contexts)
+	: (IntentName == "Changed Place")
+<-
+	.print("Chatbot pedindo se algum objeto mudou de lugar");
+	.send(location1,question,changed_place);
+	.	
+	
 +!responder(ResponseId, IntentName, Params, Contexts)
 	: true
 <-

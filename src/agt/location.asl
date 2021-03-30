@@ -39,6 +39,24 @@ leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc
 //Se for igual, estão no mesmo lugar (bem difícil de acontecer)
 leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc):- X==X2 & Loc="igual".
 
+//Se não encontrou nenhum objeto com o mesmo nome na lista devolve true
+isNewObject(Obj, [], Resp):- Resp=true.
+//Se encontrou um objeto com o mesmo nome na lista devolve false
+isNewObject(Obj, [objectRepresentation(Obj1,_,_,_,_)|RestOfTheList], Resp):- Obj==Obj1 & Resp=false.
+//Se não tem o mesmo nome que o objeto que está sendo procurado, passa para o próximo
+isNewObject(Obj, [objectRepresentation(Obj1,_,_,_,_)|RestOfTheList], Resp):- Obj\==Obj1 & isNewObject(Obj, RestOfTheList, Resp).
+
+//Recebe a solicitação para deletar os objetos que tem Status same
+deleteSame(List,NewList):- deleteSame(List,[],NewList).
+//Se a lista está vazia devolve dentro do NewList o que estava em Temp
+deleteSame([], Temp, NewList) :- NewList=Temp.
+//Se a lista estiver com erro devolve o erro
+deleteSame([obj(erro)|RestOfTheList],Temp, NewList) :- deleteSame([],[obj(erro)],NewList).
+//Se o objeto está com status same, ignora ele
+deleteSame([obj(_,_,same)|RestOfTheList],Temp, NewList) :- deleteSame(RestOfTheList,Temp,NewList).
+//Se é um status diferente de same, guarda junto na lista Temp
+deleteSame([Obj|RestOfTheList],Temp, NewList) :- .concat([Obj], Temp, T) & deleteSame(RestOfTheList,T,NewList).
+
 //!getSpecificObject([param("object-name", "pessoa")],R).
 
 //!getObjects(Response).
@@ -47,8 +65,7 @@ leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc
 	: true
 <-
 	.print("Solicitacao recebida: getObjects");
-	!informObjects(List);	
-	//!getSpecificObject(params, Resp);
+	!informObjects(List);
 	!generateResponse(List, Response);
 	.print(Response);
 	.
@@ -71,6 +88,145 @@ leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc
     +lastObjects(List);
     .print(List);
     .
+
++!changedPlace(Response)
+	: lastObjects(InitialList)
+<-
+	.print("Solicitacao recebida: changedPlace");
+	informObjects(NewList);
+	.print("InitialList");
+	.print(InitialList);
+	.print("NewList");
+	.print(NewList);
+	!searchMembers(InitialList, NewList, [], Resp);//Percorre a lista da imagem inicial para ver se algum objeto mudou de lugar ou desapareceu e salva um resumo do que encontrou
+	!checkNewObjects(NewList, InitialList, Resp, Summary);//Percorre a lista da segunda imagem em busca de objetos que não estavam na primeira imagem e também exclui da lista os objetos com status=same
+	.print("Summary");
+	.print(Summary);
+	?deleteSame(Summary,NewSummary); // Deleta os objetos com status same
+	.print("NewSummary");
+	.print(NewSummary);
+	-lastObjects(_);// Deleta da base de crenças a informação da imagem antiga
+	!createResponse(NewSummary, "", Response);// Com base no resumo criado, monta a resposta que será enviada para o usuário
+	+lastObjects(NewList);// Salva a informação da nova imagem na base de crenças.
+	.
++!changedPlace(Response)
+<-
+	.print("Solicitacao recebida: changedPlace");
+	Response="Desculpe, no momento eu nao tenho nenhuma informacao previa do ambiente para comparar.";
+	.
+
++!createResponse([], "", Response)
+<-
+	Response = "Nenhum objeto mudou de lugar.";
+	.
++!createResponse([], Temp, Response)
+<-
+	Response = Temp;
+	.
++!createResponse([obj(erro)|RestOfTheList], Temp, Response)// Se houver erro, cria a resposta avisando que houve erro
+<-
+	T="Desculpe-me, houve um erro e nao consegui verificar";
+	!createResponse([], T, Response);
+	.
++!createResponse([obj(Obj, Loc, Status)|[]], Temp, Response)// Com base no resumo criado, monta a resposta que será enviada para o usuário
+	: (Status==disappeared)
+<-
+	.concat(Temp, "e o objeto ", Obj, " nao foi localizado.", T);
+	!createResponse([], T, Response);
+	.
++!createResponse([obj(Obj, Loc, Status)|RestOfTheList], Temp, Response)
+	: (Status==disappeared)
+<-
+	.concat(Temp, "O objeto ", Obj, " nao foi localizado, ", T);
+	!createResponse(RestOfTheList, T, Response);
+	.
++!createResponse([obj(Obj, Loc, Status)|[]], Temp, Response)
+	: (Status==modified)
+<-
+	.concat(Temp, "e o objeto ", Obj, " agora esta ",Loc, ".", T);
+	!createResponse([], T, Response);
+	.
++!createResponse([obj(Obj, Loc, Status)|RestOfTheList], Temp, Response)
+	: (Status==modified)
+<-
+	.concat(Temp, "O objeto ", Obj, " agora esta ",Loc, ", ", T);
+	!createResponse(RestOfTheList, T, Response);
+	.
++!createResponse([obj(Obj, Loc, Status)|[]], Temp, Response)
+	: (Status==new)
+<-
+	.concat(Temp, "e o objeto ", Obj, " agora foi localizado e esta ",Loc, ".", T);
+	!createResponse([], T, Response);
+	.
++!createResponse([obj(Obj, Loc, Status)|RestOfTheList], Temp, Response)
+	: (Status==new)
+<-
+	.concat(Temp, "O objeto ", Obj, " agora foi localizado e esta",Loc, ", ", T);
+	!createResponse(RestOfTheList, T, Response);
+	.
+
+
++!checkNewObjects([], InitialList, Summary, Response)  //Devolve a lista criada 
+<-
+	Response=Summary;
+	.
++!checkNewObjects([objectRepresentation("Erro")|RestOfTheList], InitialList, Summary, Response) //Se a lista estiver com erro devolve o erro
+<-
+	.concat([obj(erro)], Summary, S);
+	!checkNewObjects([], InitialList, S, Response);
+	.
++!checkNewObjects([objectRepresentation(Obj,Conf,CenterX,CenterY,Loc)|RestOfTheList], InitialList, Summary, Response) //Percorre a lista da segunda imagem em busca de objetos que não estavam na primeira imagem
+	: isNewObject(Obj, InitialList, Resp) & (Resp==true)
+<-
+	.concat([obj(Obj, Loc, new)], Summary, S)
+	!checkNewObjects(RestOfTheList, InitialList, S, Response);
+	.
++!checkNewObjects([objectRepresentation(Obj,Conf,CenterX,CenterY,Loc)|RestOfTheList], InitialList, Summary, Response)
+<-
+	!checkNewObjects(RestOfTheList, InitialList, Summary, Response);
+	.
+	
++!searchMembers([], NewList, Summary, Response)
+<-
+	Response=Summary;
+	.
++!searchMembers([objectRepresentation(Obj,Conf,CenterX,CenterY,Loc)|RestOfTheList], NewList, Summary, Response) //Percorre a lista da imagem inicial para ver se algum objeto mudou de lugar ou desapareceu e salva um resumo do que encontrou
+<-
+	!isTheLocationModified(Obj, Loc, NewList, Resp); // Verifica se a localização foi modificada e cria um objeto do tipo obj(Obj, Loc, Status)
+	.concat([Resp], Summary, S); //Summary=[obj(Obj, Loc, Status)], Status = disappeared/same/modified
+	!searchMembers(RestOfTheList, NewList, S, Response);
+	.
++!searchMembers([objectRepresentation("Erro")|RestOfTheList], NewList, Summary, Response) //Se a lista estiver com erro devolve o erro
+<-
+	.concat([obj(erro)], Summary, S);
+	!searchMembers([], NewList, S, Response);
+	.
+
+
++!isTheLocationModified(Obj, Loc, [], Resp)
+<-
+	Resp=obj(Obj, Loc, disappeared);
+	.
++!isTheLocationModified(Obj, Loc, [objectRepresentation(Obj2,Conf,CenterX,CenterY,Loc2)|RestOfTheList], Resp) // Verifica se a localização foi modificada
+	: (Obj \== Obj2)
+<-
+	!isTheLocationModified(Obj, Loc, RestOfTheList, Resp);
+	.
++!isTheLocationModified(Obj, Loc, [objectRepresentation("Erro")|RestOfTheList], Resp) //Se a lista estiver com erro devolve o erro
+<-
+	Resp=obj(erro);
+	.
++!isTheLocationModified(Obj, Loc, [objectRepresentation(Obj2,Conf,CenterX,CenterY,Loc2)|RestOfTheList], Resp)
+	: (Obj == Obj2) & (Loc == Loc2)
+<-
+	Resp=obj(Obj, Loc2, same);
+	.
++!isTheLocationModified(Obj, Loc, [objectRepresentation(Obj2,Conf,CenterX,CenterY,Loc2)|RestOfTheList], Resp)
+	: (Obj == Obj2) & (Loc \== Loc2)
+<-
+	Resp=obj(Obj, Loc2, modified);
+	.
+
 
  +!locateObject([], List, Response) // Se não veio parâmetros responde que não sabe oq procurar
 <- 
@@ -255,6 +411,10 @@ leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc
 
 +!kqml_received(Sender,question,get_specific_object(Params),MsgId)
 	<-	!getSpecificObject(Params, Response);
+		.send(Sender,assert,Response).
+
++!kqml_received(Sender,question,changed_place,MsgId)
+	<-	!changedPlace(Response);
 		.send(Sender,assert,Response).
 
 
