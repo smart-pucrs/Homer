@@ -114,9 +114,12 @@ public class CloudVision {
 
 		String cord1 = newCords.substring(0, newCords.indexOf(",")); // x1 e y1
 		newCords = newCords.replaceFirst(cord1, "").replaceFirst(",", "");
-		if (!cord1.substring(0, 1).contains("x")) {
+		if (!cord1.contains("x")) {
 			x1 = 0.001;
 			y1 = Double.parseDouble(cord1.replaceAll("y:", ""));
+		} else if(!cord1.contains("y")){
+			x1 = Double.parseDouble(cord1.replaceAll("x:", ""));
+			y1 = 0.001;
 		} else {
 			x1 = Double.parseDouble(cord1.substring(0, cord1.indexOf("y")).replaceAll("x:", ""));
 			y1 = Double.parseDouble(cord1.replaceAll("x:" + String.valueOf(x1), "").replaceAll("y:", ""));
@@ -124,9 +127,12 @@ public class CloudVision {
 
 		String cord2 = newCords.substring(0, newCords.indexOf(",")); // x2 e y2
 		newCords = newCords.replaceFirst(cord2, "").replaceFirst(",", "");
-		if (!cord2.substring(0, 1).contains("x")) {
+		if (!cord2.contains("x")) {
 			x2 = 0.999;
 			y2 = Double.parseDouble(cord2.replaceAll("y:", ""));
+		} else if(!cord2.contains("y")){
+			x2 = Double.parseDouble(cord2.replaceAll("x:", ""));
+			y2 = 0.001;
 		} else {
 			x2 = Double.parseDouble(cord2.substring(0, cord2.indexOf("y")).replaceAll("x:", ""));
 			y2 = Double.parseDouble(cord2.replaceAll("x:" + String.valueOf(x2), "").replaceAll("y:", ""));
@@ -134,18 +140,24 @@ public class CloudVision {
 
 		String cord3 = newCords.substring(0, newCords.indexOf(",")); // x3 e y3
 		newCords = newCords.replaceFirst(cord3, "").replaceFirst(",", "");
-		if (!cord3.substring(0, 1).contains("x")) {
+		if (!cord3.contains("x")) {
 			x3 = 0.999;
 			y3 = Double.parseDouble(cord3.replaceAll("y:", ""));
+		} else if(!cord3.contains("y")){
+			x3 = Double.parseDouble(cord3.replaceAll("x:", ""));
+			y3 = 0.999;
 		} else {
-			x3 = Double.parseDouble(cord3.substring(0, cord2.indexOf("y")).replaceAll("x:", ""));
+			x3 = Double.parseDouble(cord3.substring(0, cord3.indexOf("y")).replaceAll("x:", ""));
 			y3 = Double.parseDouble(cord3.replaceAll("x:" + String.valueOf(x3), "").replaceAll("y:", ""));
 		}
 
 		String cord4 = newCords; // x4 e y4
-		if (!cord4.substring(0, 1).contains("x")) {
+		if (!cord4.contains("x")) {
 			x4 = 0.001;
 			y4 = Double.parseDouble(cord4.replaceAll("y:", ""));
+		} else if(!cord4.contains("y")){
+			x4 = Double.parseDouble(cord4.replaceAll("x:", ""));
+			y4 = 0.999;
 		} else {
 			x4 = Double.parseDouble(cord4.substring(0, cord4.indexOf("y")).replaceAll("x:", ""));
 			y4 = Double.parseDouble(cord4.replaceAll("x:" + String.valueOf(x4), "").replaceAll("y:", ""));
