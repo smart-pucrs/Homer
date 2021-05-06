@@ -8,9 +8,13 @@ import com.google.gson.Gson;
 
 class ReturnValues {
 	private boolean Light;
+	private int return_value;
 	ReturnValues(){	
 	}
 	public boolean getLight() {
+		if(return_value == 0) Light = true;
+		else if(return_value == 1) Light = false;
+		else Light = null;
 		return Light;
 	}
 }
@@ -40,7 +44,7 @@ public class CheckLights {
             
             // Organiza a resposta em JSON
             Gson gson = new Gson();
-            ReturnValues Jresponse = gson.fromJson(response2.body(), ReturnValues.class);
+            ReturnValues Jresponse = gson.fromJson(response.body(), ReturnValues.class);
             
             // Verifica a variavel e exibe a resposta
             if(Jresponse.getLight()) {
