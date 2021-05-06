@@ -14,7 +14,7 @@ class ReturnValues {
 	public boolean getLight() {
 		if(return_value == 0) Light = true;
 		else if(return_value == 1) Light = false;
-		else Light = null;
+		//else Light = null;
 		return Light;
 	}
 }
