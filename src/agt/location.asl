@@ -14,47 +14,47 @@ getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localiza
 //Se o Value for diferente do Nome, verifique o proximo objeto 
 getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- (Value \== Nome) & getObj(Value, RestOfTheList, Obj).
 
-//Se a lista est√° vazia, retorna o objeto mais pr√≥ximo
+//Se a lista esta vazia, retorna o objeto mais proximo
 lessDiffY(TargetObj, [], Diff, Obj, Return):- Return=Obj.
-//Se o objeto atual da lista √© o mesmo que est√° sendo pesquisado, pula
+//Se o objeto atual da lista for o mesmo que est· sendo pesquisado, pula
 lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (TargetName==Name) & lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
-//Se a diferen√ßa entre esses objetos for maior ou igual a diferen√ßa j√° encontrada entre outros objetos, passa pro pr√≥ximo
+//Se a diferenÁa entre esses objetos for maior ou igual a diferenÁa j· encontrada entre outros objetos, passa pro prÛximo
 lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (Diff1 = (TargetY + Y)/2) & (Diff1 >= Diff) & lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
-//Se a diferen√ßa entre esses objetos for menor do que a diferen√ßa j√° encontrada entre outros objetos, salva ela como diferen√ßa e os novos dados do objeto
+//Se a diferenÁa entre esses objetos for menor do que a diferenÁa j· encontrada entre outros objetos, salva ela como diferenÁa e os novos dados do objeto
 lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (Diff1 = (TargetY + Y)/2) & (Diff1 < Diff) & lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff1, objectRepresentation(Name,C,X,Y,L), Return).
 
-//Se a lista est√° vazia, retorna o objeto mais pr√≥ximo
+//Se a lista est· vazia, retorna o objeto mais prÛximo
 lessDiffX(TargetObj, [], Diff, Obj, Return):- Return=Obj.
-//Se o objeto atual da lista √© o mesmo que est√° sendo pesquisado, pula
+//Se o objeto atual da lista È o mesmo que est· sendo pesquisado, pula
 lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (TargetName==Name) & lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
-//Se a diferen√ßa entre esses objetos for maior ou igual a diferen√ßa j√° encontrada entre outros objetos, passa pro pr√≥ximo
+//Se a diferenÁa entre esses objetos for maior ou igual a diferenÁa j· encontrada entre outros objetos, passa pro prÛximo
 lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (Diff1 = (TargetX + X)/2) & (Diff1 >= Diff) & lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
-//Se a diferen√ßa entre esses objetos for menor do que a diferen√ßa j√° encontrada entre outros objetos, salva ela como diferen√ßa e os novos dados do objeto
+//Se a diferenÁa entre esses objetos for menor do que a diferenÁaa j· encontrada entre outros objetos, salva ela como diferenÁa e os novos dados do objeto
 lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (Diff1 = (TargetX + X)/2) & (Diff1 < Diff) & lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff1, objectRepresentation(Name,C,X,Y,L), Return).
 
-//Se o primeiro valor for menor que o segundo, o primeiro objeto est√° √  esquerda do segundo
+//Se o primeiro valor for menor que o segundo, o primeiro objeto est· ‡ esquerda do segundo
 leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc):- X<X2 & Loc="esquerda".
-//Se o primeiro valor for maior que o segundo, o primeiro objeto est√° √  direita do segundo
+//Se o primeiro valor for maior que o segundo, o primeiro objeto est· ¿ direita do segundo
 leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc):- X>X2 & Loc="direita".
-//Se for igual, est√£o no mesmo lugar (bem dif√≠cil de acontecer)
+//Se for igual, est„o no mesmo lugar (bem difÌcil de acontecer)
 leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc):- X==X2 & Loc="igual".
 
-//Se n√£o encontrou nenhum objeto com o mesmo nome na lista devolve true
+//Se n„o encontrou nenhum objeto com o mesmo nome na lista devolve true
 isNewObject(Obj, [], Resp):- Resp=true.
 //Se encontrou um objeto com o mesmo nome na lista devolve false
 isNewObject(Obj, [objectRepresentation(Obj1,_,_,_,_)|RestOfTheList], Resp):- Obj==Obj1 & Resp=false.
-//Se n√£o tem o mesmo nome que o objeto que est√° sendo procurado, passa para o pr√≥ximo
+//Se n√£o tem o mesmo nome que o objeto que est· sendo procurado, passa para o prÛximo
 isNewObject(Obj, [objectRepresentation(Obj1,_,_,_,_)|RestOfTheList], Resp):- Obj\==Obj1 & isNewObject(Obj, RestOfTheList, Resp).
 
-//Recebe a solicita√ß√£o para deletar os objetos que tem Status same
+//Recebe a solicitaÁ„o para deletar os objetos que tem Status same
 deleteSame(List,NewList):- deleteSame(List,[],NewList).
-//Se a lista est√° vazia devolve dentro do NewList o que estava em Temp
+//Se a lista est· vazia devolve dentro do NewList o que estava em Temp
 deleteSame([], Temp, NewList) :- NewList=Temp.
 //Se a lista estiver com erro devolve o erro
 deleteSame([obj(erro)|RestOfTheList],Temp, NewList) :- deleteSame([],[obj(erro)],NewList).
-//Se o objeto est√° com status same, ignora ele
+//Se o objeto est· com status same, ignora ele
 deleteSame([obj(_,_,same)|RestOfTheList],Temp, NewList) :- deleteSame(RestOfTheList,Temp,NewList).
-//Se √© um status diferente de same, guarda junto na lista Temp
+//Se È um status diferente de same, guarda junto na lista Temp
 deleteSame([Obj|RestOfTheList],Temp, NewList) :- .concat([Obj], Temp, T) & deleteSame(RestOfTheList,T,NewList).
 
 //Devolve a quantidade de objetos que tem com aquele nome
@@ -71,11 +71,13 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 //
 //+!start
 //<- 
+//	 
+//	!createResponse([obj("copos","  a frente",modified)], "", Response);
 //	.concat([objectRepresentation("pessoa","0.9114741",0.5429375000000001,0.629640235,"  a frente"),objectRepresentation("celular","0.8556559",0.30895625,0.552859215," 8 graus a esquerda"),objectRepresentation("pessoa","0.9114741",0.5429375000000001,0.629640235,"  a frente"),objectRepresentation("janela","0.70355695",0.34507889,0.3008662897," 7 graus a esquerda"),objectRepresentation("janela","0.80355695",0.32507889,0.3108662897," 8 graus a esquerda")], List);
 //	+lastObjects(List);
 //	!changedPlace(Response);
 //	.print(Response);
-////	!numberSimilar(List, Resp);
+//	!numberSimilar(List, Resp);
 //	.
 
 +!numberSimilar(List, Resp) //Numera os objetos que tem o mesmo nome
@@ -164,9 +166,9 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	?deleteSame(Summary,NewSummary); // Deleta os objetos com status same
 	.print("NewSummary");
 	.print(NewSummary);
-	-lastObjects(_);// Deleta da base de cren√ßas a informa√ß√£o da imagem antiga
-	!createResponse(NewSummary, "", Response);// Com base no resumo criado, monta a resposta que ser√° enviada para o usu√°rio
-	+lastObjects(NewList);// Salva a informa√ß√£o da nova imagem na base de cren√ßas.
+	-lastObjects(_);// Deleta da base de crenÁas a informaÁ„o da imagem antiga
+	!createResponse(NewSummary, "", Response);// Com base no resumo criado, monta a resposta que ser· enviada para o usu·rio
+	+lastObjects(NewList);// Salva a informaÁ„o da nova imagem na base de crenÁas.
 	.
 +!changedPlace(Response)
 <-
@@ -187,7 +189,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	T="Desculpe-me, houve um erro e nao consegui verificar";
 	!createResponse([], T, Response);
 	.
-+!createResponse([obj(Obj, Loc, Status)|[]], [], Response)// Com base no resumo criado, monta a resposta que ser√° enviada para o usu√°rio
++!createResponse([obj(Obj, Loc, Status)|[]], "", Response)// Com base no resumo criado, monta a resposta que ser· enviada para o usu·rio
 	: (Status==disappeared)
 <-
 	.delete(0, Obj, O);
@@ -208,7 +210,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.concat(Temp, "O objeto ", O, " nao foi localizado, ", T);
 	!createResponse(RestOfTheList, T, Response);
 	.
-+!createResponse([obj(Obj, Loc, Status)|[]], [], Response)
++!createResponse([obj(Obj, Loc, Status)|[]], "", Response)
 	: (Status==modified)
 <-
 	.delete(0, Obj, O);
@@ -229,7 +231,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.concat(Temp, "O objeto ", O, " agora esta ",Loc, ", ", T);
 	!createResponse(RestOfTheList, T, Response);
 	.
-+!createResponse([obj(Obj, Loc, Status)|[]], [], Response)
++!createResponse([obj(Obj, Loc, Status)|[]], "", Response)
 	: (Status==new)
 <-
 	.delete(0, Obj, O);
@@ -261,7 +263,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.concat([obj(erro)], Summary, S);
 	!checkNewObjects([], InitialList, S, Response);
 	.
-+!checkNewObjects([objectRepresentation(Obj,Conf,CenterX,CenterY,Loc)|RestOfTheList], InitialList, Summary, Response) //Percorre a lista da segunda imagem em busca de objetos que n√£o estavam na primeira imagem
++!checkNewObjects([objectRepresentation(Obj,Conf,CenterX,CenterY,Loc)|RestOfTheList], InitialList, Summary, Response) //Percorre a lista da segunda imagem em busca de objetos que n„o estavam na primeira imagem
 	: isNewObject(Obj, InitialList, Resp) & (Resp==true)
 <-
 	.concat([obj(Obj, Loc, new)], Summary, S)
@@ -278,7 +280,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.
 +!searchMembers([objectRepresentation(Obj,Conf,CenterX,CenterY,Loc)|RestOfTheList], NewList, Summary, Response) //Percorre a lista da imagem inicial para ver se algum objeto mudou de lugar ou desapareceu e salva um resumo do que encontrou
 <-
-	!isTheLocationModified(Obj, Loc, NewList, Resp); // Verifica se a localiza√ß√£o foi modificada e cria um objeto do tipo obj(Obj, Loc, Status)
+	!isTheLocationModified(Obj, Loc, NewList, Resp); // Verifica se a localizaÁ„o foi modificada e cria um objeto do tipo obj(Obj, Loc, Status)
 	.concat([Resp], Summary, S); //Summary=[obj(Obj, Loc, Status)], Status = disappeared/same/modified
 	!searchMembers(RestOfTheList, NewList, S, Response);
 	.
@@ -293,7 +295,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 <-
 	Resp=obj(Obj, Loc, disappeared);
 	.
-+!isTheLocationModified(Obj, Loc, [objectRepresentation(Obj2,Conf,CenterX,CenterY,Loc2)|RestOfTheList], Resp) // Verifica se a localiza√ß√£o foi modificada
++!isTheLocationModified(Obj, Loc, [objectRepresentation(Obj2,Conf,CenterX,CenterY,Loc2)|RestOfTheList], Resp) // Verifica se a localizaÁ„o foi modificada
 	: (Obj \== Obj2)
 <-
 	!isTheLocationModified(Obj, Loc, RestOfTheList, Resp);
@@ -314,36 +316,36 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.
 
 
- +!locateObject([], List, Response) // Se n√£o veio par√¢metros responde que n√£o sabe oq procurar
+ +!locateObject([], List, Response) // Se n„o veio par‚metros responde que n„o sabe oq procurar
 <- 
 	.print("Nao entendi qual objeto devo procurar");
 	Response = "Desculpe, nao entendi qual objeto devo procurar.";
     .
- +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se n√£o √© o par√¢metro esperado, chama o plano novamente pra ver o pr√≥ximo par√¢metro
+ +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se n„o È o par‚metro esperado, chama o plano novamente pra ver o prÛximo par‚metro
 	: (Key \== "object-name")
 <- 
 	.print("Outro parametro: ", Key);
 	!locateObject(RestOfTheList, List, Response)
     .
-+!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se o objeto procurado est√° com status de erro retornado pelo artefato, informa que houve erro
++!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se o objeto procurado est· com status de erro retornado pelo artefato, informa que houve erro
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation == "Erro")
 <- 
 	.print("Erro ao localizar o objeto ", Value);
     Response = "Desculpe-me, houve um erro e nao consegui verificar";
     .
- +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se o objeto procurado est√° com status de indefinido retornado pela regra, informa que n√£o conseguiu localizar
+ +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se o objeto procurado est· com status de indefinido retornado pela regra, informa que n„o conseguiu localizar
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation == "indefinido")
 <- 	
 	.print("Objeto ", Value, " nao localizado na imagem ");
     .concat("Desculpe, nao consegui localizar o objeto ", Value, Response);
     .
-+!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se identificou na imagem apenas o objeto procurado, informa a localiza√ß√£o dele
++!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se identificou na imagem apenas o objeto procurado, informa a localizaÁ„o dele
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & .length(List,Length) & Length == 1
 <- 
 	.print("Objeto ", Value, " localizado: ", ObjectLocation);
     .concat("O objeto ", Value, " esta localizado", ObjectLocation, Response);
     .
-+!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se encontrou outros objetos al√©m do objeto procurado, informa a rela√ß√£o dele com outros objetos (no m√°ximo 2)
++!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se encontrou outros objetos alÈm do objeto procurado, informa a relaÁ„o dele com outros objetos (no m·ximo 2)
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & .length(List,Length) & Length > 1
 <- 
 	.print("mais de um objeto");
@@ -354,13 +356,13 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	!createRelationString(Value, List, RelationList, Temp, Response);	
     .
    
-+!createRelationString(Value, List, [objectRepresentation(Name,_,X,Y,_)|[]], Temp, RelationString) // Adiciona a √∫ltima frase na resposta que vai ser enviada pro usu√°rio
++!createRelationString(Value, List, [objectRepresentation(Name,_,X,Y,_)|[]], Temp, RelationString) // Adiciona a ˙ltima frase na resposta que vai ser enviada pro usu·rio
 	: getObj(Value, List, Obj) & leftOrRight(Obj,objectRepresentation(Name,_,X,Y,_),Loc)
 <-
 	.print("E a ",Loc,  " do objeto ", Name, ".");
     .concat(Temp, " E a ",Loc,  " do objeto ", Name, ".", RelationString);   
     .
-+!createRelationString(Value, List, [objectRepresentation(Name,_,X,Y,_)|RestOfTheList], Temp, RelationString) // Adiciona a frase de rela√ß√£o entre objetos na resposta
++!createRelationString(Value, List, [objectRepresentation(Name,_,X,Y,_)|RestOfTheList], Temp, RelationString) // Adiciona a frase de relaÁ„o entre objetos na resposta
 	: getObj(Value, List, Obj) & leftOrRight(Obj,objectRepresentation(Name,_,X,Y,_),Loc)
 <-
 	.print("A ",Loc,  " do objeto ", Name, ".");
@@ -369,12 +371,12 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
     .
 
 
-+!getClosestObjects(Name, List, RelationList) // se identificou menos de 3 objetos, retira o objeto que est√° sendo procurado da lista e devolve os outros dois
++!getClosestObjects(Name, List, RelationList) // se identificou menos de 3 objetos, retira o objeto que est· sendo procurado da lista e devolve os outros dois
 	: getObj(Name, List, Obj) & .length(List,Length) & Length <= 3 
 <- 
 	.delete(Obj,List,RelationList).
     
-+!getClosestObjects(Name, List, RelationList) // Pega os dois objetos "mais pr√≥ximos" e devolve apenas os dois em uma lista 
++!getClosestObjects(Name, List, RelationList) // Pega os dois objetos "mais prÛximos" e devolve apenas os dois em uma lista 
 	: getObj(Name, List, Obj) & .length(List,Length) & Length > 3 
 <- 
 	.delete(Obj,List,L);
@@ -384,12 +386,12 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.concat([ObjX],[ObjY],RelationList);
 	.
 	
-+!getClosestX(Obj,L,ObjX) // busca o objeto horizontalmente "mais pr√≥ximo" 
++!getClosestX(Obj,L,ObjX) // busca o objeto horizontalmente "mais prÛximo" 
 	: lessDiffX(Obj, L, 10, Objr, Return)
 <-
 	ObjX=Return.
 	
-+!getClosestY(Obj,L,ObjY) // busca o objeto verticalmente "mais pr√≥ximo" 
++!getClosestY(Obj,L,ObjY) // busca o objeto verticalmente "mais prÛximo" 
 	: lessDiffY(Obj, L, 10, Objr, Return)
 <-
 	ObjY=Return.

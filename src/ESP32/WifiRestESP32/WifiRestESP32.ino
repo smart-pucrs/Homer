@@ -9,14 +9,14 @@
 aREST rest = aREST();
 WiFiServer server(80);
  
-const char* ssid = "NOME_DA_REDE"; // Nome da rede wifi (inserir)
-const char* password =  "SENHA_REDE"; // Senha do wifi (inserir)
+const char* ssid = "wifi_ju_EXT"; // Nome da rede wifi (inserir)
+const char* password =  "Gremio1j"; // Senha do wifi (inserir)
 
 DHT dht(THpin, DHTTYPE); // Define o pino e o tipo de sensor DHT
 
 void setup() {
  
-  Serial.begin(115200); // Inicializa o console da IDE com o ESP32
+  Serial.begin(9600); // Inicializa o console da IDE com o ESP32
   dht.begin(); // Inicializa a biblioteca do Sensor DHT
   pinMode(LightPin, INPUT_PULLUP); // Configuração do pino do sensor
 

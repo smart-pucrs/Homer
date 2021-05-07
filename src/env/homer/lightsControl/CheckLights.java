@@ -21,7 +21,7 @@ class ReturnValues {
 
 public class CheckLights {
 
-	private static String ESP32IP = "ESP32_IP"; // Inserir o IP do ESP32 exibido no console da IDE da placa
+	private static String ESP32IP = "192.168.1.185"; // Inserir o IP do ESP32 exibido no console da IDE da placa
 	
 	public static String check() {
 		try {
