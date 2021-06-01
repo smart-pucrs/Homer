@@ -18,7 +18,7 @@ public class CheckRoomHum {
 		}
 	}
 
-private static String ESP32IP = "192.168.1.185"; // Inserir o IP do ESP32 exibido no console da IDE da placa
+private static String ESP32IP = "192.168.1.128"; // Inserir o IP do ESP32 exibido no console da IDE da placa
 	
 //	public static void main(String args[]) {
 	public static String currentHumidity() {

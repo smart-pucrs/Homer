@@ -20,7 +20,7 @@ public class LightsArtifact extends Artifact {
 		List<Object> lightStatusList = new ArrayList<Object>();
 		try {
 			String status = CheckLights.check();
-			Literal l = ASSyntax.createLiteral("lightStatus", ASSyntax.createString("quarto"));
+			Literal l = ASSyntax.createLiteral("lightStatus", ASSyntax.createString("cozinha"));
 			l.addTerm(ASSyntax.createString(status));
 			lightStatusList.add(l);
 			lightsStatus.set(lightStatusList.toArray(new Literal[lightStatusList.size()]));

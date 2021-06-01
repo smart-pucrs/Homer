@@ -32,7 +32,7 @@
 	: (IntentName == "Get Objects In The Scene")
 <-
 	.print("Chatbot solicitando informacao sobre os objetos na imagem.");
-	.send(location1,question,get_objects);
+	.send(location1,question,get_objects(Params));
 	.
 	
 +!responder(ResponseId, IntentName, Params, Contexts)
@@ -129,7 +129,7 @@
 +!responder(ResponseId, IntentName, Params, Contexts)
 	: true
 <-
-	reply("Desculpe, nao reconheco essa intensao");
+	reply("Desculpe, não reconheço essa intensão");
 	.
 
 +!printInformedObjects([]).

@@ -9,7 +9,7 @@
 aREST rest = aREST();
 WiFiServer server(80);
  
-const char* ssid = "wifi_ju_EXT"; // Nome da rede wifi (inserir)
+const char* ssid = "wifi_ju"; // Nome da rede wifi (inserir)
 const char* password =  "Gremio1j"; // Senha do wifi (inserir)
 
 DHT dht(THpin, DHTTYPE); // Define o pino e o tipo de sensor DHT

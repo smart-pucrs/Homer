@@ -14,9 +14,9 @@ getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localiza
 //Se o Value for diferente do Nome, verifique o proximo objeto 
 getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- (Value \== Nome) & getObj(Value, RestOfTheList, Obj).
 
-//Se a lista esta vazia, retorna o objeto mais proximo
+//Se a lista está vazia, retorna o objeto mais próximo
 lessDiffY(TargetObj, [], Diff, Obj, Return):- Return=Obj.
-//Se o objeto atual da lista for o mesmo que está sendo pesquisado, pula
+//Se o objeto atual da lista é o mesmo que está sendo pesquisado, pula
 lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (TargetName==Name) & lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
 //Se a diferença entre esses objetos for maior ou igual a diferença já encontrada entre outros objetos, passa pro próximo
 lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (Diff1 = (TargetY + Y)/2) & (Diff1 >= Diff) & lessDiffY(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
@@ -29,12 +29,12 @@ lessDiffX(TargetObj, [], Diff, Obj, Return):- Return=Obj.
 lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (TargetName==Name) & lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
 //Se a diferença entre esses objetos for maior ou igual a diferença já encontrada entre outros objetos, passa pro próximo
 lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (Diff1 = (TargetX + X)/2) & (Diff1 >= Diff) & lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff, Obj, Return).
-//Se a diferença entre esses objetos for menor do que a diferençaa já encontrada entre outros objetos, salva ela como diferença e os novos dados do objeto
+//Se a diferença entre esses objetos for menor do que a diferença já encontrada entre outros objetos, salva ela como diferença e os novos dados do objeto
 lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], Diff, Obj, Return):- (Diff1 = (TargetX + X)/2) & (Diff1 < Diff) & lessDiffX(objectRepresentation(TargetName,TargetC,TargetX,TargetY,TargetL), RestOfTheList, Diff1, objectRepresentation(Name,C,X,Y,L), Return).
 
 //Se o primeiro valor for menor que o segundo, o primeiro objeto está à esquerda do segundo
 leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc):- X<X2 & Loc="esquerda".
-//Se o primeiro valor for maior que o segundo, o primeiro objeto está À direita do segundo
+//Se o primeiro valor for maior que o segundo, o primeiro objeto está à direita do segundo
 leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc):- X>X2 & Loc="direita".
 //Se for igual, estão no mesmo lugar (bem difícil de acontecer)
 leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc):- X==X2 & Loc="igual".
@@ -43,7 +43,7 @@ leftOrRight(objectRepresentation(_,_,X,_,_),objectRepresentation(_,_,X2,_,_),Loc
 isNewObject(Obj, [], Resp):- Resp=true.
 //Se encontrou um objeto com o mesmo nome na lista devolve false
 isNewObject(Obj, [objectRepresentation(Obj1,_,_,_,_)|RestOfTheList], Resp):- Obj==Obj1 & Resp=false.
-//Se nÃ£o tem o mesmo nome que o objeto que está sendo procurado, passa para o próximo
+//Se não tem o mesmo nome que o objeto que está sendo procurado, passa para o próximo
 isNewObject(Obj, [objectRepresentation(Obj1,_,_,_,_)|RestOfTheList], Resp):- Obj\==Obj1 & isNewObject(Obj, RestOfTheList, Resp).
 
 //Recebe a solicitação para deletar os objetos que tem Status same
@@ -120,14 +120,16 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.
 
 
-+!getObjects(Response)
++!getObjects(Params, Response)
 	: true
 <-
 	.print("Solicitacao recebida: getObjects");
 	!informObjects(List);
-	!generateResponse(List, Response);
+	!getRoom(Params, Room);
+	!generateResponse(Room, List, Response);
 	.print(Response);
 	.
+
 	
 +!getSpecificObject(Params, Response)
 	: true
@@ -160,7 +162,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.print("NewListNumbered");
 	.print(NewListNumbered);
 	!searchMembers(InitialListNumbered, NewListNumbered, [], Resp);//Percorre a lista da imagem inicial para ver se algum objeto mudou de lugar ou desapareceu e salva um resumo do que encontrou
-	!checkNewObjects(NewListNumbered, InitialListNumbered, Resp, Summary);//Percorre a lista da segunda imagem em busca de objetos que nÃ£o estavam na primeira imagem e tambÃ©m exclui da lista os objetos com status=same
+	!checkNewObjects(NewListNumbered, InitialListNumbered, Resp, Summary);//Percorre a lista da segunda imagem em busca de objetos que não estavam na primeira imagem e também exclui da lista os objetos com status=same
 	.print("Summary");
 	.print(Summary);
 	?deleteSame(Summary,NewSummary); // Deleta os objetos com status same
@@ -176,6 +178,21 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	Response="Desculpe, no momento eu nao tenho nenhuma informacao previa do ambiente para comparar.";
 	.
 
++!getRoom([], Room)
+<-
+	Room=false;
+	.
++!getRoom([param(Key, Value)|RestOfTheList], Room)
+	: (Key \== "room")
+<-
+	!getRoom(RestOfTheList, Room);
+	.
++!getRoom([param(Key, Value)|RestOfTheList], Room)
+	: (Key == "room")
+<-
+	Room = Value;
+	.
+	
 +!createResponse([], "", Response)
 <-
 	Response = "Nenhum objeto mudou de lugar.";
@@ -396,28 +413,31 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 <-
 	ObjY=Return.
 
-
-+!generateResponse(List, Response) // when there are more than one object
++!generateResponse(Room, List, Response) // when the room was not informed
+	: (Room == false)
+<-
+	Response = "Desculpe-me, nao compreendi de qual comodo devo verificar os objetos";
+	.
++!generateResponse(Room, List, Response) // when there are more than one object
 	: .length(List,Length) & Length > 1
 <-
-	.concat("Eu encontrei ", Length, " objetos, ", Temp);
+	.concat("Eu encontrei ", Length, " objetos no comodo ", Room, ", ", Temp);
 	!dismemberItems(List, [], FinalList); // create a list in the format [obj (Name, Count)] where Count is the number of occurrences of a given object 
 	.print(FinalList);
 	!completingResponse(FinalList, Temp, Response); // assembles the response to send to the user based on FinalList
 	.
-+!generateResponse(List, Response)// when there are only one object
++!generateResponse(Room, List, Response)// when there are only one object
 	: .length(List,Length) & Length == 1
 <-
-	.concat("Eu encontrei ", Temp);
+	.concat("Eu encontrei no comodo ", Room, " ", Temp);
 	!dismemberItems(List, [], FinalList); // create a list in the format [obj (Name, Count)] where Count is the number of occurrences of a given object 
 	.print(FinalList);
 	!completingResponse(FinalList, Temp, Response); // assembles the response to send to the user based on FinalList
 	.
-+!generateResponse(List, Response)// when there are no objects
++!generateResponse(Room, List, Response)// when there are no objects
 	: .length(List,Length) & Length < 1
 <-
-	Response = "Eu nao encontrei nenhum objeto.";
-	.concat("Eu nao encontrei nenhum objeto.", Response);
+	.concat("Eu nao encontrei nenhum objeto no comodo ", Room, ".", Response);
 	.
 
 
@@ -493,8 +513,8 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 
 
 
-+!kqml_received(Sender,question,get_objects,MsgId)
-	<-	!getObjects(Response);
++!kqml_received(Sender,question,get_objects(Params),MsgId)
+	<-	!getObjects(Params, Response);
 		.send(Sender,assert,Response).
 
 +!kqml_received(Sender,question,get_specific_object(Params),MsgId)
