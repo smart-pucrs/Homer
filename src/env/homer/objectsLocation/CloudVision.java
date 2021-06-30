@@ -1,6 +1,7 @@
 package homer.objectsLocation;
 
 import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,26 +25,28 @@ public class CloudVision {
 	        throws Exception, IOException {
 		System.out.format("|======Teste======|%n");
 		  List<ObjectRepresentation> returnObjectArr = new ArrayList<>();
-		  
+		  //teste
+		  String inputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/photo1.jpg";
 		  // Configuracao de conexao com API de traducao
 		  Translate translate = TranslateOptions.getDefaultInstance().getService(); 
 
 		  // Configuracao para a API de deteccao
 	      List<AnnotateImageRequest> requests = new ArrayList<>();
 	      
-
-	      ByteArrayInputStream photo = PersonalWebCam.takePhoto();
+	      //teste
+	    //  ByteArrayInputStream photo = PersonalWebCam.takePhoto();
 	      
-//	      ByteString imgBytes = ByteString.readFrom(new FileInputStream(inputPath));
-	      ByteString imgBytes = ByteString.readFrom(photo);
+	      ByteString imgBytes = ByteString.readFrom(new FileInputStream(inputPath));
+	//      ByteString imgBytes = ByteString.readFrom(photo);
 
 	      Image img = Image.newBuilder().setContent(imgBytes).build();
 	      AnnotateImageRequest request =
 	          AnnotateImageRequest.newBuilder()
-	              .addFeatures(Feature.newBuilder().setType(Type.OBJECT_LOCALIZATION))
+	             .addFeatures(Feature.newBuilder().setType(Type.OBJECT_LOCALIZATION))
 	              .setImage(img)
 	              .build();
 	      requests.add(request);
+	      
 	      
 	      System.out.format("Making request for Vision API...%n");
 	      // Envia a request para a API

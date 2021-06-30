@@ -28,12 +28,14 @@ public class DrawImagesThread extends Thread {
 	// Funcao para localizar aquivos de entrada e saida da imagem
 	public void run() {
 		try {
-			String outputPath = PersonalWebCam.getOutputPath().substring(0, PersonalWebCam.getOutputPath().indexOf(".jpg")) + "-output.jpg"; 
+			//String outputPath = PersonalWebCam.getOutputPath().substring(0, PersonalWebCam.getOutputPath().indexOf(".jpg")) + "-output.jpg"; 
+			String outputPath = "C:/Users/Juliana/Desktop/Pictures_webcam/photo1-output.jpg";
 			System.out.println("Executando Thread Assincrona!");
-			File imgtest = new File(PersonalWebCam.getOutputPath());
+			//File imgtest = new File(PersonalWebCam.getOutputPath());
 			FileInputStream imgtd;
 
-			imgtd = new FileInputStream(imgtest);
+			//imgtd = new FileInputStream(imgtest);
+			imgtd = new FileInputStream("C:/Users/Juliana/Desktop/Pictures_webcam/photo1.jpg");
 
 			BufferedImage img = ImageIO.read(imgtd);
 			drawImages(img, objs);
