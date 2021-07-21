@@ -5,14 +5,14 @@ getLocation(Value, [objectRepresentation(Status)], ObjectLocation) :- (Status ==
 //Se o Value for igual ao Nome, devolva a localizacao
 getLocation(Value, [objectRepresentation(Nome,_,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- .substring(Nome,Value) & .print("---------------- Substring: ") & .print(.substring(Nome,Value)) & .print(Localizacao) & ObjectLocation=Localizacao.
 //Se o Value for diferente do Nome, verifique o proximo objeto 
-getLocation(Value, [objectRepresentation(Nome,_,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- getLocation(Value, RestOfTheList, ObjectLocation).
+getLocation(Value, [objectRepresentation(Nome,_,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- not .substring(Nome,Value) & getLocation(Value, RestOfTheList, ObjectLocation).
 
 //Se a lista terminar sem encontrar nenhum objeto igual, devolva "indefinido".
 getObj(Value, [], Obj) :- ObjectLocation="indefinido".
 //Se o Value for igual ao Nome, devolva o objeto
 getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- .substring(Nome,Value) & Obj=objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao).
 //Se o Value for diferente do Nome, verifique o proximo objeto 
-getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- getObj(Value, RestOfTheList, Obj).
+getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- not .substring(Nome,Value) & .print("---------------- Substring:false ") & getObj(Value, RestOfTheList, Obj).
 
 //Se a lista está vazia, retorna o objeto mais próximo
 lessDiffY(TargetObj, [], Diff, Obj, Return):- Return=Obj.
@@ -342,6 +342,8 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	: (Key \== "object-name")
 <- 
 	.print("Outro parametro: ", Key);
+	.print("-------- List: ")
+    .print(List);
 	!locateObject(RestOfTheList, List, Response)
     .
 +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se o objeto procurado está com status de erro retornado pelo artefato, informa que houve erro
