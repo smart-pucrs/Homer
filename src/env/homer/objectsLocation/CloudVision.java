@@ -77,7 +77,21 @@ public class CloudVision {
 	            	     Translate.TranslateOption.targetLanguage("pt"),
 	            	           Translate.TranslateOption.model("base"));
 			       String Tname = translation.getTranslatedText().toLowerCase(); // Traduz o nome do objeto
+
+			     //tradução de alguns objetos específicos
+			       if(Tname.equals("cabinetry")) {
+			    	   Tname = "armário";
+			    	//   System.out.format("teste1  ");
+			    	//   System.out.format(Tname);
+			       }
+			       if(Tname.equals("frigorífico")) {
+			    	   Tname = "geladeira";
+			    	 //  System.out.format("teste2  ");
+			    	 //  System.out.format(Tname);
+			       } 
+			       //fim teste  
 			       
+			    	   
 			       names[nObj] = Tname; 
 			       nObj++;
 			       
@@ -95,6 +109,7 @@ public class CloudVision {
 			       } else {
 			       	name = Tname;
 			       }
+			       
 			       
 			       ObjectRepresentation obj = new ObjectRepresentation(name, entity.getScore(), objBoundCords); //Cria o objeto com seus respectivos valores
 			       returnObjectArr.add(obj);         

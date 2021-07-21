@@ -3,16 +3,16 @@ getLocation(Value, [], ObjectLocation) :- ObjectLocation="indefinido".
 //Se houve erro ao buscar os objetos, devolva "erro".
 getLocation(Value, [objectRepresentation(Status)], ObjectLocation) :- (Status == "Erro") & ObjectLocation=Status.
 //Se o Value for igual ao Nome, devolva a localizacao
-getLocation(Value, [objectRepresentation(Nome,_,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- (Value == Nome) & ObjectLocation=Localizacao.
+getLocation(Value, [objectRepresentation(Nome,_,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- .substring(Nome,Value) & .print("---------------- Substring: ") & .print(.substring(Nome,Value)) & .print(Localizacao) & ObjectLocation=Localizacao.
 //Se o Value for diferente do Nome, verifique o proximo objeto 
-getLocation(Value, [objectRepresentation(Nome,_,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- (Value \== Nome) & getLocation(Value, RestOfTheList, ObjectLocation).
+getLocation(Value, [objectRepresentation(Nome,_,_,_,Localizacao)|RestOfTheList], ObjectLocation) :- getLocation(Value, RestOfTheList, ObjectLocation).
 
 //Se a lista terminar sem encontrar nenhum objeto igual, devolva "indefinido".
 getObj(Value, [], Obj) :- ObjectLocation="indefinido".
 //Se o Value for igual ao Nome, devolva o objeto
-getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- (Value == Nome) & Obj=objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao).
+getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- .substring(Nome,Value) & Obj=objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao).
 //Se o Value for diferente do Nome, verifique o proximo objeto 
-getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- (Value \== Nome) & getObj(Value, RestOfTheList, Obj).
+getObj(Value, [objectRepresentation(Nome, Confidence, CenterX, CenterY, Localizacao)|RestOfTheList], Obj) :- getObj(Value, RestOfTheList, Obj).
 
 //Se a lista está vazia, retorna o objeto mais próximo
 lessDiffY(TargetObj, [], Diff, Obj, Return):- Return=Obj.
@@ -134,7 +134,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 +!getSpecificObject(Params, Response)
 	: true
 <-
-	.print("Solicitacao recebida: getSpecificObject");
+	.print("Solicitação recebida: getSpecificObject");
 	!informObjects(List);
 	!locateObject(Params, List, Response);
 	.print(Response);
@@ -153,7 +153,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 +!changedPlace(Response)
 	: lastObjects(InitialList)
 <-
-	.print("Solicitacao recebida: changedPlace");
+	.print("Solicitação recebida: changedPlace");
 	!numberSimilar(InitialList, InitialListNumbered);
 	informObjects(NewList);	
 	!numberSimilar(NewList, NewListNumbered);
@@ -174,7 +174,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.
 +!changedPlace(Response)
 <-
-	.print("Solicitacao recebida: changedPlace");
+	.print("Solicitação recebida: changedPlace");
 	Response="Desculpe, no momento eu nao tenho nenhuma informacao previa do ambiente para comparar.";
 	.
 
@@ -203,28 +203,28 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.
 +!createResponse([obj(erro)|RestOfTheList], Temp, Response)// Se houver erro, cria a resposta avisando que houve erro
 <-
-	T="Desculpe-me, houve um erro e nao consegui verificar";
+	T="Desculpe-me, houve um erro e nao consegui verificar. Por favor, solicite novamente.";
 	!createResponse([], T, Response);
 	.
 +!createResponse([obj(Obj, Loc, Status)|[]], "", Response)// Com base no resumo criado, monta a resposta que será enviada para o usuário
 	: (Status==disappeared)
 <-
 	.delete(0, Obj, O);
-	.concat("O objeto ", O, " nao foi localizado.", T);
+	.concat("O objeto ", O, " não foi localizado. Por favor, solicite novamente.", T);
 	!createResponse([], T, Response);
 	.
 +!createResponse([obj(Obj, Loc, Status)|[]], Temp, Response)
 	: (Status==disappeared)
 <-
 	.delete(0, Obj, O);
-	.concat(Temp, "e o objeto ", O, " nao foi localizado.", T);
+	.concat(Temp, "e o objeto ", O, " não foi localizado. Por favor, solicite novamente.", T);
 	!createResponse([], T, Response);
 	.
 +!createResponse([obj(Obj, Loc, Status)|RestOfTheList], Temp, Response)
 	: (Status==disappeared)
 <-
 	.delete(0, Obj, O);
-	.concat(Temp, "O objeto ", O, " nao foi localizado, ", T);
+	.concat(Temp, "O objeto ", O, " não foi localizado, ", T);
 	!createResponse(RestOfTheList, T, Response);
 	.
 +!createResponse([obj(Obj, Loc, Status)|[]], "", Response)
@@ -252,21 +252,21 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	: (Status==new)
 <-
 	.delete(0, Obj, O);
-	.concat("O objeto ", O, " agora foi localizado e esta ",Loc, ".", T);
+	.concat("O objeto ", O, " agora foi localizado e está ",Loc, ".", T);
 	!createResponse([], T, Response);
 	.
 +!createResponse([obj(Obj, Loc, Status)|[]], Temp, Response)
 	: (Status==new)
 <-
 	.delete(0, Obj, O);
-	.concat(Temp, "e o objeto ", O, " agora foi localizado e esta ",Loc, ".", T);
+	.concat(Temp, "e o objeto ", O, " agora foi localizado e está ",Loc, ".", T);
 	!createResponse([], T, Response);
 	.
 +!createResponse([obj(Obj, Loc, Status)|RestOfTheList], Temp, Response)
 	: (Status==new)
 <-
 	.delete(0, Obj, O);
-	.concat(Temp, "O objeto ", O, " agora foi localizado e esta",Loc, ", ", T);
+	.concat(Temp, "O objeto ", O, " agora foi localizado e está",Loc, ", ", T);
 	!createResponse(RestOfTheList, T, Response);
 	.
 
@@ -335,8 +335,8 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 
  +!locateObject([], List, Response) // Se não veio parâmetros responde que não sabe oq procurar
 <- 
-	.print("Nao entendi qual objeto devo procurar");
-	Response = "Desculpe, nao entendi qual objeto devo procurar.";
+	.print("Nao entendi qual objeto devo procurar. Por favor, repita a solicitação. ");
+	Response = "Desculpe, não entendi qual objeto devo procurar. Por favor, repita a solicitação.";
     .
  +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se não é o parâmetro esperado, chama o plano novamente pra ver o próximo parâmetro
 	: (Key \== "object-name")
@@ -348,19 +348,19 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation == "Erro")
 <- 
 	.print("Erro ao localizar o objeto ", Value);
-    Response = "Desculpe-me, houve um erro e nao consegui verificar";
+    Response = "Desculpe-me, houve um erro e não consegui verificar. Por favor, repita a solicitação.";
     .
  +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se o objeto procurado está com status de indefinido retornado pela regra, informa que não conseguiu localizar
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & (ObjectLocation == "indefinido")
 <- 	
-	.print("Objeto ", Value, " nao localizado na imagem ");
-    .concat("Desculpe, nao consegui localizar o objeto ", Value, Response);
+	.print("Objeto ", Value, " não localizado na imagem ");
+    .concat("Desculpe, não consegui localizar o objeto ", Value, ". Por favor, repita a solicitação.", Response);
     .
 +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se identificou na imagem apenas o objeto procurado, informa a localização dele
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & .length(List,Length) & Length == 1
 <- 
 	.print("Objeto ", Value, " localizado: ", ObjectLocation);
-    .concat("O objeto ", Value, " esta localizado", ObjectLocation, Response);
+    .concat("O objeto ", Value, " está localizado", ObjectLocation, Response);
     .
 +!locateObject([param(Key, Value)|RestOfTheList], List, Response) // Se encontrou outros objetos além do objeto procurado, informa a relação dele com outros objetos (no máximo 2)
 	: (Key == "object-name") & getLocation(Value, List, ObjectLocation) & .length(List,Length) & Length > 1
@@ -368,7 +368,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 	.print("mais de um objeto");
 	!getClosestObjects(Value, List, RelationList);
 	.print("Objeto ", Value, " localizado: ", ObjectLocation);
-    .concat("O objeto ", Value, " esta localizado", ObjectLocation, ".", Temp);
+    .concat("O objeto ", Value, " está localizado", ObjectLocation, ".", Temp);
     .print(RelationList);
 	!createRelationString(Value, List, RelationList, Temp, Response);	
     .
@@ -416,12 +416,12 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 +!generateResponse(Room, List, Response) // when the room was not informed
 	: (Room == false)
 <-
-	Response = "Desculpe-me, nao compreendi de qual comodo devo verificar os objetos";
+	Response = "Desculpe-me, não compreendi de qual cômodo devo verificar os objetos. Por favor, tente novamente.";
 	.
 +!generateResponse(Room, List, Response) // when there are more than one object
 	: .length(List,Length) & Length > 1
 <-
-	.concat("Eu encontrei ", Length, " objetos no comodo ", Room, ", ", Temp);
+	.concat("Eu encontrei ", Length, " objetos no cômodo ", Room, ", ", Temp);
 	!dismemberItems(List, [], FinalList); // create a list in the format [obj (Name, Count)] where Count is the number of occurrences of a given object 
 	.print(FinalList);
 	!completingResponse(FinalList, Temp, Response); // assembles the response to send to the user based on FinalList
@@ -429,7 +429,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 +!generateResponse(Room, List, Response)// when there are only one object
 	: .length(List,Length) & Length == 1
 <-
-	.concat("Eu encontrei no comodo ", Room, " ", Temp);
+	.concat("Eu encontrei no cômodo ", Room, " ", Temp);
 	!dismemberItems(List, [], FinalList); // create a list in the format [obj (Name, Count)] where Count is the number of occurrences of a given object 
 	.print(FinalList);
 	!completingResponse(FinalList, Temp, Response); // assembles the response to send to the user based on FinalList
@@ -437,7 +437,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 +!generateResponse(Room, List, Response)// when there are no objects
 	: .length(List,Length) & Length < 1
 <-
-	.concat("Eu nao encontrei nenhum objeto no comodo ", Room, ".", Response);
+	.concat("Eu não encontrei nenhum objeto no cômodo ", Room, ". Por favor, tente novamente", Response);
 	.
 
 
@@ -468,7 +468,7 @@ howManySimilar(TargetName, [objectRepresentation(Name,C,X,Y,L)|RestOfTheList], I
 +!completingResponse([objectRepresentation(Status)|RestOfTheList], Temp, Response) // if there was an error, then it returns this message
 	: .length(RestOfTheList,Length) & Length < 1
 <-
-	Response = "Desculpe-me, houve um erro e nao consegui verificar";
+	Response = "Desculpe-me, houve um erro e nao consegui verificar. Por favor, repita a solicitação.";
 	.	
 +!completingResponse([], Temp, Response)
 <-
