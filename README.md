@@ -9,7 +9,7 @@ For the integration between JaCaMo and Dialogflow, we used the code available at
 [Juliana Damasio Oliveira](https://github.com/julianadamasio), 
 [Olimar Teixeira Borges](https://github.com/olimarborges), 
 [Tabajara Krausburg](https://github.com/TabajaraKrausburg), 
-[Marivaldo Vivan](https://github.com/Vivannaboa) and
+[Marivaldo Vivan](https://github.com/Vivannaboa), and
 [Rafael H. Bordini](https://github.com/rbordini).
 
 
